@@ -1,0 +1,3087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SMS 机场安全管理系统（预览）</title>
+<style>
+/* =====================================================================
+   SMS 机场安全管理系统 · 全局样式（设计系统）
+   配色：主色深蓝 #1F4E79 / 墨绿 #2E6B5E，点缀橙 #E8833A
+   浅色内容区，深蓝侧栏；禁止黑色背景。
+   ===================================================================== */
+:root{
+  --brand:#1F4E79; --brand-2:#2E6B9E; --brand-dark:#163A5C;
+  --brand-soft:#E8EFF7; --brand-soft2:#F2F6FB;
+  --teal:#2E6B5E; --teal-soft:#E6F0EC;
+  --accent:#E8833A; --accent-soft:#FBEBDD;
+  --ok:#3F8F5C; --ok-soft:#E7F3EC;
+  --info:#2E75B6; --info-soft:#E7F0F8;
+  --warn:#E0A024; --warn-soft:#FAF1DA;
+  --danger:#C0392B; --danger-soft:#F8E7E5;
+  --gray:#6B7684; --gray-soft:#EEF1F5;
+  --ink:#1F2A37; --ink-2:#4A5563; --muted:#8A94A3;
+  --bg:#F3F5F9; --panel:#FFFFFF; --border:#E2E7EE; --border-2:#EDF0F5;
+  --shadow:0 1px 2px rgba(31,78,121,.06), 0 4px 14px rgba(31,78,121,.06);
+  --shadow-lg:0 10px 40px rgba(22,58,92,.18);
+  --radius:8px; --radius-sm:6px;
+  --side-w:232px; --top-h:56px;
+  --font:"Microsoft YaHei","微软雅黑","PingFang SC","Segoe UI",-apple-system,Arial,sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{margin:0;font-family:var(--font);font-size:13px;color:var(--ink);background:var(--bg);
+  -webkit-font-smoothing:antialiased;}
+a{color:var(--brand);text-decoration:none;}
+button{font-family:inherit;}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-thumb{background:#c7d0dc;border-radius:6px;}
+::-webkit-scrollbar-thumb:hover{background:#aab8c8;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ---------- 登录页 ---------- */
+.login-wrap{position:fixed;inset:0;display:flex;
+  background:linear-gradient(120deg,#163A5C 0%,#1F4E79 46%,#2E6B5E 100%);}
+.login-aside{flex:1.15;display:flex;flex-direction:column;justify-content:center;padding:0 7vw;color:#fff;}
+.login-aside .logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;letter-spacing:1px;}
+.login-aside .logo .mark{width:40px;height:40px;border-radius:9px;background:rgba(255,255,255,.16);
+  display:flex;align-items:center;justify-content:center;}
+.login-aside h1{font-size:34px;margin:34px 0 14px;font-weight:700;line-height:1.3;}
+.login-aside p{font-size:14px;line-height:1.9;color:rgba(255,255,255,.82);margin:0;max-width:480px;}
+.login-aside .pills{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;}
+.login-aside .pills span{font-size:12px;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.12);}
+.login-box{flex:.85;display:flex;align-items:center;justify-content:center;padding:0 4vw;}
+.login-card{width:100%;max-width:380px;background:#fff;border-radius:14px;padding:36px 34px;box-shadow:var(--shadow-lg);}
+.login-card h2{margin:0 0 4px;font-size:21px;color:var(--brand-dark);}
+.login-card .sub{color:var(--muted);font-size:12.5px;margin-bottom:24px;}
+.login-tabs{display:flex;gap:22px;margin-bottom:20px;border-bottom:1px solid var(--border);}
+.login-tabs button{border:0;background:none;font-size:13.5px;color:var(--muted);padding:9px 2px;cursor:pointer;border-bottom:2px solid transparent;}
+.login-tabs button.active{color:var(--brand);border-bottom-color:var(--brand);font-weight:700;}
+.lg-field{margin-bottom:16px;}
+.lg-field label{display:block;font-size:12px;color:var(--ink-2);margin-bottom:6px;}
+.lg-field .ipt{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 11px;height:40px;background:#fff;}
+.lg-field .ipt svg{margin-right:8px;flex:none;}
+.lg-field input{border:0;outline:none;flex:1;font-size:13.5px;background:transparent;width:100%;font-family:inherit;}
+.lg-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin:-4px 0 18px;color:var(--muted);}
+.lg-row a{color:var(--brand);}
+.btn-login{width:100%;height:42px;border:0;border-radius:var(--radius-sm);background:var(--brand);color:#fff;
+  font-size:14.5px;font-weight:700;cursor:pointer;letter-spacing:2px;}
+.btn-login:hover{background:var(--brand-dark);}
+.login-demo{margin-top:18px;border-top:1px dashed var(--border);padding-top:14px;}
+.login-demo p{margin:0 0 8px;font-size:11.5px;color:var(--muted);}
+.login-demo .chips{display:flex;flex-wrap:wrap;gap:7px;}
+.login-demo .chips button{font-size:11.5px;border:1px solid var(--border);background:var(--brand-soft2);
+  color:var(--brand-dark);border-radius:14px;padding:4px 11px;cursor:pointer;}
+.login-demo .chips button:hover{background:var(--brand-soft);}
+.login-foot{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:rgba(255,255,255,.6);font-size:11.5px;}
+
+/* ---------- 主框架 ---------- */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:var(--side-w);background:linear-gradient(180deg,#1F4E79 0%,#1A4168 60%,#163A5C 100%);
+  color:#cdd9e8;position:fixed;top:0;bottom:0;left:0;display:flex;flex-direction:column;z-index:30;}
+.side-brand{height:var(--top-h);display:flex;align-items:center;gap:10px;padding:0 16px;color:#fff;font-weight:700;font-size:15px;
+  border-bottom:1px solid rgba(255,255,255,.08);}
+.side-brand .mark{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex:none;}
+.side-nav{flex:1;overflow-y:auto;padding:10px 0 24px;}
+.side-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);}
+.nav-group{margin-top:6px;}
+.nav-group > .grp-title{display:flex;align-items:center;gap:8px;padding:9px 16px 5px;font-size:11px;color:#8FA6C0;
+  letter-spacing:1px;text-transform:uppercase;}
+.nav-group > .grp-title svg{opacity:.8;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px 8px 20px;color:#c4d2e3;font-size:13px;cursor:pointer;border-left:3px solid transparent;white-space:nowrap;}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.13);color:#fff;border-left-color:var(--accent);font-weight:700;}
+.nav-item .nicon{width:16px;flex:none;opacity:.9;}
+.side-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#8FA6C0;line-height:1.6;}
+
+.main{flex:1;margin-left:var(--side-w);display:flex;flex-direction:column;min-width:0;}
+.topbar{height:var(--top-h);background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;
+  padding:0 20px;gap:14px;position:sticky;top:0;z-index:20;}
+.crumb{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);}
+.crumb .cur{color:var(--ink);font-weight:700;}
+.topbar .spacer{flex:1;}
+.top-search{display:flex;align-items:center;background:var(--gray-soft);border-radius:18px;padding:0 12px;height:34px;width:240px;}
+.top-search input{border:0;background:transparent;outline:none;flex:1;font-size:12.5px;font-family:inherit;}
+.top-icon-btn{position:relative;width:36px;height:36px;border-radius:50%;border:0;background:transparent;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:var(--ink-2);}
+.top-icon-btn:hover{background:var(--gray-soft);}
+.top-icon-btn .dot{position:absolute;top:6px;right:7px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;
+  background:var(--danger);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;}
+.role-switch{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);background:var(--brand-soft2);
+  border:1px solid var(--border);border-radius:16px;padding:0 10px;height:32px;cursor:pointer;}
+.role-switch select{border:0;background:transparent;outline:none;font-size:12px;font-family:inherit;color:var(--brand-dark);cursor:pointer;}
+.user-chip{display:flex;align-items:center;gap:9px;cursor:pointer;padding:4px 6px;border-radius:20px;}
+.user-chip:hover{background:var(--gray-soft);}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--teal));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;}
+.user-chip .meta{line-height:1.25;}
+.user-chip .meta .nm{font-size:12.5px;font-weight:700;color:var(--ink);}
+.user-chip .meta .rl{font-size:11px;color:var(--muted);}
+
+.content{padding:18px 20px 30px;flex:1;}
+.page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.page-head h2{margin:0;font-size:17px;color:var(--brand-dark);display:flex;align-items:center;gap:9px;}
+.page-head .desc{font-size:12px;color:var(--muted);margin-top:3px;font-weight:400;}
+.page-head .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+/* ---------- 通用组件 ---------- */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+.card-h{padding:12px 16px;border-bottom:1px solid var(--border-2);display:flex;align-items:center;justify-content:space-between;}
+.card-h .t{font-size:13.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;}
+.card-b{padding:14px 16px;}
+.grid{display:grid;gap:14px;}
+.g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);} .g6{grid-template-columns:repeat(6,1fr);}
+.row{display:flex;gap:14px;}.col{flex:1;min-width:0;}
+.mt{margin-top:14px;}.mb{margin-bottom:14px;}.mr{margin-right:8px;}
+.muted{color:var(--muted);}.small{font-size:11.5px;}.strong{font-weight:700;}
+.tc{text-align:center;}.tr{text-align:right;}.nowrap{white-space:nowrap;}
+
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:13px;position:relative;overflow:hidden;}
+.stat-card .sic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none;}
+.stat-card .sv{font-size:23px;font-weight:700;line-height:1.1;color:var(--ink);}
+.stat-card .sl{font-size:12px;color:var(--muted);margin-top:2px;}
+.stat-card .ss{font-size:11px;margin-top:3px;}
+.stat-card .ss.up{color:var(--danger);} .stat-card .ss.down{color:var(--ok);}
+.stat-card .bar{position:absolute;left:0;top:0;bottom:0;width:3px;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;color:var(--ink-2);
+  padding:7px 13px;border-radius:var(--radius-sm);font-size:12.5px;cursor:pointer;white-space:nowrap;}
+.btn:hover{border-color:var(--brand);color:var(--brand);}
+.btn-primary{background:var(--brand);border-color:var(--brand);color:#fff;}
+.btn-primary:hover{background:var(--brand-dark);color:#fff;}
+.btn-teal{background:var(--teal);border-color:var(--teal);color:#fff;}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn-danger{background:#fff;border-color:var(--danger);color:var(--danger);}
+.btn-sm{padding:4px 9px;font-size:11.5px;border-radius:5px;}
+.btn[disabled]{opacity:.5;cursor:not-allowed;}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:11px;font-size:11.5px;font-weight:400;
+  background:var(--gray-soft);color:var(--gray);white-space:nowrap;}
+.badge.blue{background:var(--info-soft);color:var(--info);}
+.badge.green{background:var(--ok-soft);color:var(--ok);}
+.badge.orange{background:var(--accent-soft);color:var(--accent);}
+.badge.red{background:var(--danger-soft);color:var(--danger);}
+.badge.yellow{background:var(--warn-soft);color:#B9830B;}
+.badge.teal{background:var(--teal-soft);color:var(--teal);}
+.badge.strong{font-weight:700;}
+
+/* 筛选条 */
+.filter-bar{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:14px;
+  display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;box-shadow:var(--shadow);}
+.filter-item{display:flex;flex-direction:column;gap:5px;}
+.filter-item label{font-size:11.5px;color:var(--muted);}
+.filter-item input,.filter-item select{height:32px;border:1px solid var(--border);border-radius:5px;padding:0 9px;font-size:12.5px;
+  font-family:inherit;background:#fff;outline:none;min-width:130px;color:var(--ink);}
+.filter-item input:focus,.filter-item select:focus{border-color:var(--brand);}
+.filter-actions{display:flex;gap:8px;margin-left:auto;}
+
+/* 表格 */
+.table-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.table-tool{padding:11px 14px;border-bottom:1px solid var(--border-2);display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.table-tool .t{font-weight:700;font-size:13.5px;color:var(--ink);}
+.table-scroll{overflow-x:auto;}
+table.dt{width:100%;border-collapse:collapse;font-size:12.5px;}
+table.dt th{background:var(--brand-soft2);color:var(--brand-dark);font-weight:700;text-align:left;padding:10px 12px;
+  border-bottom:1px solid var(--border);white-space:nowrap;font-size:12px;}
+table.dt td{padding:9px 12px;border-bottom:1px solid var(--border-2);color:var(--ink-2);vertical-align:middle;}
+table.dt tr:hover td{background:var(--brand-soft2);}
+table.dt tr.overdue td{background:var(--danger-soft);}
+table.dt tr.overdue td:first-child{box-shadow:inset 3px 0 0 var(--danger);}
+table.dt .col-act{white-space:nowrap;text-align:right;}
+table.dt .act-link{color:var(--brand);cursor:pointer;margin-left:10px;font-size:12px;}
+table.dt .act-link:hover{text-decoration:underline;}
+table.dt .act-link.danger{color:var(--danger);}
+table.dt .cell-main{color:var(--ink);font-weight:400;}
+table.dt .cell-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.pager{padding:10px 14px;display:flex;align-items:center;gap:8px;justify-content:flex-end;font-size:12px;color:var(--muted);}
+.pager button{min-width:30px;height:28px;border:1px solid var(--border);background:#fff;border-radius:5px;cursor:pointer;color:var(--ink-2);}
+.pager button.cur{background:var(--brand);color:#fff;border-color:var(--brand);}
+.pager button[disabled]{opacity:.45;cursor:not-allowed;}
+
+/* 弹窗 / 抽屉 */
+.modal-mask{position:fixed;inset:0;background:rgba(22,42,66,.45);z-index:60;display:flex;align-items:flex-start;
+  justify-content:center;padding:6vh 16px;}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:640px;box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column;max-height:88vh;}
+.modal.lg{max-width:920px;} .modal.xl{max-width:1120px;}
+.modal-h{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-h .t{font-size:15px;font-weight:700;color:var(--brand-dark);}
+.modal-x{border:0;background:transparent;font-size:18px;color:var(--muted);cursor:pointer;line-height:1;}
+.modal-b{padding:18px;overflow-y:auto;}
+.modal-f{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:9px;background:#fafbfc;}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px 16px;}
+.form-grid .span2{grid-column:span 2;}
+.f-item{display:flex;flex-direction:column;gap:5px;}
+.f-item label{font-size:12px;color:var(--ink-2);}
+.f-item label .req{color:var(--danger);margin-right:2px;}
+.f-item input,.f-item select,.f-item textarea{border:1px solid var(--border);border-radius:5px;padding:8px 10px;font-size:12.5px;
+  font-family:inherit;outline:none;background:#fff;color:var(--ink);width:100%;}
+.f-item textarea{resize:vertical;min-height:64px;}
+.f-item input:focus,.f-item select:focus,.f-item textarea:focus{border-color:var(--brand);}
+.f-item .help{font-size:11px;color:var(--muted);}
+.f-item.err input,.f-item.err select,.f-item.err textarea{border-color:var(--danger);}
+.f-item .errmsg{font-size:11px;color:var(--danger);}
+.f-item input[type=file]{padding:6px;}
+.f-readonly{background:var(--gray-soft)!important;color:var(--ink-2);}
+
+/* 标签页 */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap;}
+.tabs button{border:0;background:none;padding:9px 15px;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;}
+.tabs button.active{color:var(--brand);border-bottom-color:var(--brand);font-weight:700;}
+.tabs button .cnt{display:inline-block;min-width:18px;padding:0 5px;height:16px;line-height:16px;border-radius:9px;
+  background:var(--gray-soft);color:var(--gray);font-size:10.5px;margin-left:5px;}
+.tabs button.active .cnt{background:var(--brand-soft);color:var(--brand);}
+
+/* 时间线 / 审批流 */
+.timeline{position:relative;padding-left:22px;}
+.timeline:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--border);}
+.tl-item{position:relative;padding-bottom:16px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item .node{position:absolute;left:-22px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--border);}
+.tl-item.done .node{border-color:var(--ok);background:var(--ok);}
+.tl-item.current .node{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);}
+.tl-item.reject .node{border-color:var(--danger);background:var(--danger);}
+.tl-item .tl-t{font-size:12.5px;font-weight:700;color:var(--ink);}
+.tl-item .tl-m{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.6;}
+.tl-item .tl-tag{margin-left:8px;}
+.approval-steps{display:flex;background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.approval-step{flex:1;padding:13px 16px;border-right:1px solid var(--border);position:relative;}
+.approval-step:last-child{border-right:0;}
+.approval-step .as-no{font-size:11px;color:var(--muted);}
+.approval-step .as-t{font-size:13px;font-weight:700;margin:3px 0;color:var(--ink);}
+.approval-step .as-m{font-size:11px;color:var(--muted);}
+.approval-step.done{background:var(--ok-soft);}
+.approval-step.done .as-t{color:var(--ok);}
+.approval-step.current{background:var(--accent-soft);}
+.approval-step.current .as-t{color:var(--accent);}
+
+/* 图表 */
+.chart{width:100%;}
+.chart-hint{font-size:11px;color:var(--muted);}
+.legend-inline{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-2);}
+.legend-inline i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+
+/* 空态 / 提示 */
+.empty{padding:44px 16px;text-align:center;color:var(--muted);}
+.empty svg{margin-bottom:10px;opacity:.5;}
+.empty .et{font-size:13px;}
+.empty .es{font-size:11.5px;margin-top:5px;}
+.toast-wrap{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:9px;align-items:center;}
+.toast{background:var(--brand-dark);color:#fff;padding:9px 18px;border-radius:7px;font-size:12.5px;box-shadow:var(--shadow-lg);
+  display:flex;align-items:center;gap:8px;animation:toastIn .2s ease;}
+.toast.ok{background:var(--ok);} .toast.err{background:var(--danger);} .toast.warn{background:var(--warn);}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+.sim-tag{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;padding:1px 7px;border-radius:3px;background:var(--warn-soft);
+  color:#9a7010;border:1px dashed #d9b25a;}
+
+/* 详情描述列表 */
+.desc-list{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.desc-list .di{display:flex;border-bottom:1px solid var(--border-2);min-height:38px;}
+.desc-list .di .dt{width:120px;background:var(--brand-soft2);color:var(--brand-dark);font-size:12px;padding:9px 12px;flex:none;}
+.desc-list .di .dd{flex:1;padding:9px 12px;font-size:12.5px;color:var(--ink);}
+.desc-list.full .di{grid-column:span 2;}
+.section-title{font-size:13.5px;font-weight:700;color:var(--brand-dark);margin:18px 0 10px;padding-left:9px;border-left:3px solid var(--accent);}
+
+/* 风险矩阵热力图 */
+.risk-matrix{display:grid;grid-template-columns:60px repeat(5,1fr);gap:4px;font-size:11.5px;}
+.risk-matrix .rm-h{text-align:center;color:var(--muted);font-size:11px;align-self:center;}
+.risk-matrix .rm-l{color:var(--muted);font-size:11px;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;}
+.rm-cell{border-radius:5px;padding:8px 4px;text-align:center;color:#fff;cursor:default;min-height:46px;display:flex;flex-direction:column;justify-content:center;}
+.rm-cell .rm-n{font-size:15px;font-weight:700;}
+.rm-cell .rm-c{font-size:10.5px;opacity:.92;}
+
+/* 看板专用 */
+.kanban-col{display:flex;flex-direction:column;gap:10px;}
+.kanban-item{border:1px solid var(--border);border-radius:6px;padding:9px 11px;background:#fff;cursor:pointer;}
+.kanban-item:hover{border-color:var(--brand);box-shadow:var(--shadow);}
+.kanban-item .ki-t{font-size:12.5px;color:var(--ink);}
+.kanban-item .ki-m{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted);}
+.list-feed{display:flex;flex-direction:column;}
+.feed-item{display:flex;gap:11px;padding:10px 2px;border-bottom:1px solid var(--border-2);cursor:pointer;}
+.feed-item:last-child{border-bottom:0;}
+.feed-item .fi-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;}
+.feed-item .fi-body{flex:1;min-width:0;}
+.feed-item .fi-t{font-size:12.5px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.feed-item .fi-m{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:10px;}
+.progress{height:7px;background:var(--gray-soft);border-radius:4px;overflow:hidden;}
+.progress > i{display:block;height:100%;background:var(--brand);border-radius:4px;}
+.progress.ok > i{background:var(--ok);} .progress.warn > i{background:var(--warn);} .progress.danger > i{background:var(--danger);}
+
+/* 移动端模拟壳 */
+.phone-shell{width:380px;max-width:100%;margin:0 auto;border:10px solid #1f2a37;border-radius:34px;background:#fff;
+  height:760px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative;}
+.phone-shell .phone-status{height:30px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;font-size:11px;}
+.phone-shell .phone-body{height:calc(100% - 30px);overflow-y:auto;background:var(--bg);}
+.phone-tabbar{position:absolute;left:0;right:0;bottom:0;height:54px;background:#fff;border-top:1px solid var(--border);
+  display:flex;}
+.phone-tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;font-size:10.5px;color:var(--muted);cursor:pointer;}
+.phone-tabbar button.active{color:var(--brand);}
+.m-card{background:#fff;border-radius:9px;margin:11px;padding:13px;box-shadow:var(--shadow);}
+.m-list-item{display:flex;align-items:center;gap:10px;background:#fff;padding:12px 14px;border-bottom:1px solid var(--border-2);cursor:pointer;}
+.m-list-item .ml-body{flex:1;min-width:0;}
+.m-list-item .ml-t{font-size:13px;color:var(--ink);}
+.m-list-item .ml-m{font-size:11px;color:var(--muted);margin-top:3px;}
+.m-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.m-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:11px;}
+.m-quick .mq{background:#fff;border-radius:9px;padding:12px 4px;text-align:center;font-size:11px;color:var(--ink-2);cursor:pointer;box-shadow:var(--shadow);}
+.m-quick .mq .mq-ic{font-size:20px;margin-bottom:5px;}
+
+@media (max-width:1100px){ .g4,.g6{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:1fr;} }
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+
+<script>
+/* ===== core/util.js ===== */
+/* =====================================================================
+   core/util.js — 通用工具（DOM、日期、编号、文本、相似度、格式化）
+   全局命名空间：window.SMS
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS || (window.SMS = {});
+
+  const util = {
+    /* ---------- DOM ---------- */
+    el(tag, attrs, children) {
+      const e = document.createElement(tag);
+      if (attrs) {
+        for (const k in attrs) {
+          const v = attrs[k];
+          if (v == null || v === false) continue;
+          if (k === 'class' || k === 'className') e.className = v;
+          else if (k === 'html') e.innerHTML = v;
+          else if (k === 'text') e.textContent = v;
+          else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+          else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2).toLowerCase(), v);
+          else if (k === 'dataset') Object.assign(e.dataset, v);
+          else if (v === true) e.setAttribute(k, '');
+          else e.setAttribute(k, v);
+        }
+      }
+      (children || []).forEach(c => {
+        if (c == null || c === false) return;
+        e.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(c) : c);
+      });
+      return e;
+    },
+    qs(sel, root) { return (root || document).querySelector(sel); },
+    qsa(sel, root) { return Array.from((root || document).querySelectorAll(sel)); },
+    on(node, ev, fn, opt) { node.addEventListener(ev, fn, opt); return node; },
+    clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; },
+
+    /* ---------- 类型 / 对象 ---------- */
+    isObject(v) { return v && typeof v === 'object' && !Array.isArray(v); },
+    clone(v) { return JSON.parse(JSON.stringify(v)); },
+    merge() { return Object.assign.apply(null, [{}].concat([].slice.call(arguments))); },
+    pick(o, keys) { const r = {}; keys.forEach(k => { if (o[k] !== undefined) r[k] = o[k]; }); return r; },
+    groupBy(arr, key) {
+      const fn = typeof key === 'function' ? key : (x) => x[key];
+      return arr.reduce((m, x) => { const k = fn(x); (m[k] = m[k] || []).push(x); return m; }, {});
+    },
+    sortBy(arr, fn, dir) {
+      const f = typeof fn === 'function' ? fn : (x) => x[fn];
+      const a = arr.slice().sort((x, y) => {
+        const vx = f(x), vy = f(y);
+        if (vx == null) return 1; if (vy == null) return -1;
+        return vx > vy ? 1 : vx < vy ? -1 : 0;
+      });
+      return dir === 'desc' ? a.reverse() : a;
+    },
+    uniq(arr) { return Array.from(new Set(arr)); },
+    sum(arr, fn) { return arr.reduce((s, x) => s + (fn ? fn(x) : (x || 0)), 0); },
+    avg(arr, fn) { return arr.length ? util.sum(arr, fn) / arr.length : 0; },
+    round(n, d) { const p = Math.pow(10, d || 0); return Math.round(n * p) / p; },
+    clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); },
+
+    /* ---------- 编号 / ID ---------- */
+    uid(prefix) {
+      const t = Date.now().toString(36);
+      const r = Math.random().toString(36).slice(2, 7);
+      return (prefix || 'ID') + '-' + t + r;
+    },
+    seqCode(prefix, n, width) {
+      return prefix + '-' + String(n).padStart(width || 4, '0');
+    },
+    nextSeq(table, prefix, width) {
+      const st = SMS.store;
+      const rows = st.all(table);
+      let max = 0;
+      rows.forEach(r => {
+        const m = (r.code || r.id || '').match(/(\d+)\s*$/);
+        if (m) max = Math.max(max, parseInt(m[1], 10));
+      });
+      return util.seqCode(prefix, max + 1, width);
+    },
+
+    /* ---------- 日期 ---------- */
+    now() { return new Date(); },
+    today() { return util.fmtDate(new Date()); },
+    nowStr() { return util.fmtDateTime(new Date()); },
+    fmtDate(d) {
+      d = d instanceof Date ? d : new Date(d);
+      if (isNaN(d)) return '';
+      const p = n => String(n).padStart(2, '0');
+      return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    },
+    fmtDateTime(d) {
+      d = d instanceof Date ? d : new Date(d);
+      if (isNaN(d)) return '';
+      const p = n => String(n).padStart(2, '0');
+      return util.fmtDate(d) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    },
+    parse(s) { return s ? new Date(s.replace(/-/g, '/')) : null; },
+    addDays(d, n) { const x = d instanceof Date ? new Date(d) : new Date(d.replace(/-/g, '/')); x.setDate(x.getDate() + n); return x; },
+    addMonths(d, n) { const x = new Date((d instanceof Date ? d : d.replace(/-/g, '/'))); x.setMonth(x.getMonth() + n); return x; },
+    daysBetween(a, b) {
+      const da = a instanceof Date ? a : new Date(a.replace(/-/g, '/'));
+      const db = b instanceof Date ? b : new Date(b.replace(/-/g, '/'));
+      return Math.round((db - da) / 86400000);
+    },
+    monthKey(d) { d = d instanceof Date ? d : new Date(d.replace(/-/g, '/')); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); },
+    /* 返回相对期限状态：过期/临期/正常 */
+    dueState(due, warnDays) {
+      if (!due) return 'normal';
+      const left = util.daysBetween(new Date(), due);
+      if (left < 0) return 'overdue';
+      if (left <= (warnDays == null ? 7 : warnDays)) return 'due';
+      return 'normal';
+    },
+
+    /* ---------- 文本 ---------- */
+    truncate(s, n) { s = s || ''; return s.length > n ? s.slice(0, n) + '…' : s; },
+    /* 简易中文分词（2-gram + 关键词），用于相似度/RAG 检索 */
+    tokenize(s) {
+      if (!s) return [];
+      s = String(s).toLowerCase().replace(/[\s\r\n\t，。、；：！？（）()\[\]【】.,;:!?""''"'']/g, ' ');
+      const toks = s.split(' ').filter(Boolean);
+      const zh = String(s).replace(/[^\u4e00-\u9fa5]/g, '');
+      const grams = [];
+      for (let i = 0; i < zh.length - 1; i++) grams.push(zh.substr(i, 2));
+      return util.uniq(toks.concat(grams));
+    },
+    /* Jaccard 文本相似度（0~1） */
+    similarity(a, b) {
+      const A = new Set(util.tokenize(a)), B = new Set(util.tokenize(b));
+      if (!A.size || !B.size) return 0;
+      let inter = 0;
+      A.forEach(t => { if (B.has(t)) inter++; });
+      return inter / (A.size + B.size - inter);
+    },
+    /* BM25 简易检索，返回 [{item,score}] */
+    bm25(query, items, field, k1, b) {
+      k1 = k1 || 1.5; b = b == null ? 0.75 : b;
+      const docs = items.map(it => util.tokenize(typeof field === 'function' ? field(it) : it[field]));
+      const N = docs.length;
+      const avgdl = util.sum(docs, d => d.length) / (N || 1);
+      const df = {};
+      docs.forEach(d => util.uniq(d).forEach(t => df[t] = (df[t] || 0) + 1));
+      const qt = util.tokenize(query);
+      return items.map((it, i) => {
+        const d = docs[i]; const tf = {};
+        d.forEach(t => tf[t] = (tf[t] || 0) + 1);
+        let score = 0;
+        qt.forEach(t => {
+          if (!df[t]) return;
+          const idf = Math.log(1 + (N - df[t] + 0.5) / (df[t] + 0.5));
+          const f = tf[t] || 0;
+          score += idf * (f * (k1 + 1)) / (f + k1 * (1 - b + b * d.length / (avgdl || 1)));
+        });
+        return { item: it, score };
+      }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+    },
+
+    /* ---------- 数字 / 百分比 ---------- */
+    pct(part, total, d) {
+      if (!total) return 0;
+      return util.round(part / total * 100, d == null ? 1 : d);
+    },
+    fmtNum(n, d) {
+      if (n == null || n === '' || isNaN(n)) return '-';
+      return Number(n).toLocaleString('zh-CN', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+    },
+
+    /* ---------- 杂项 ---------- */
+    download(filename, content, mime) {
+      const blob = new Blob([content], { type: mime || 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = util.el('a', { href: url, download: filename });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    },
+    exportCSV(filename, columns, rows) {
+      const head = columns.map(c => '"' + (c.title || c) + '"').join(',');
+      const body = rows.map(r => columns.map(c => {
+        const v = c.field ? r[c.field] : '';
+        return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      }).join(',')).join('\r\n');
+      util.download(filename, '\ufeff' + head + '\r\n' + body, 'text/csv;charset=utf-8');
+    },
+    debounce(fn, ms) { let t; return function () { const a = arguments, c = this; clearTimeout(t); t = setTimeout(() => fn.apply(c, a), ms); }; },
+    escapeHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    },
+    /* 由姓/名生成头像文字 */
+    initials(name) {
+      if (!name) return '?';
+      return name.length > 2 ? name.slice(-2) : name;
+    }
+  };
+
+  SMS.util = util;
+  window.SMS = SMS;
+})();
+
+
+/* ===== core/store.js ===== */
+/* =====================================================================
+   core/store.js — 数据访问层
+   - 内存库 + localStorage 持久化（file:// 可用、同步、零安装）
+   - 种子注册：registerSeed(table, rows, opts)
+   - 通用 CRUD / 查询 / 元数据（定时任务用）
+   生产环境对应：MySQL/SQL Server + Redis + 分布式对象存储（见 PDS）
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS || (window.SMS = {});
+  const U = SMS.util;
+  const DB_KEY = 'SMS_DB_V2';
+  const META_KEY = 'SMS_META_V2';
+
+  let db = {};
+  let meta = {};
+  const seeds = {};            // table -> {rows, opts}
+  let saveTimer = null;
+
+  function persist() {
+    try {
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      localStorage.setItem(META_KEY, JSON.stringify(meta));
+    } catch (e) {
+      console.warn('持久化失败（可能超出本地存储配额）：', e);
+    }
+  }
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persist, 120);
+  }
+
+  const store = {
+    _seeds: seeds,
+    /* ---------- 种子 ---------- */
+    registerSeed(table, rows, opts) {
+      seeds[table] = { rows: U.clone(rows || []), opts: opts || {} };
+    },
+    /* 从种子构建（版本变更或首次） */
+    buildFromSeeds() {
+      db = {};
+      for (const t in seeds) {
+        const s = seeds[t];
+        db[t] = U.clone(s.rows);
+      }
+      meta = { bootAt: U.fmtDateTime(new Date()), version: 2, jobs: {} };
+      persist();
+      return db;
+    },
+    /* ---------- 生命周期 ---------- */
+    init() {
+      let raw = null, mraw = null;
+      try { raw = localStorage.getItem(DB_KEY); mraw = localStorage.getItem(META_KEY); } catch (e) {}
+      if (raw) {
+        try { db = JSON.parse(raw); meta = mraw ? JSON.parse(mraw) : { jobs: {} }; }
+        catch (e) { db = this.buildFromSeeds(); }
+      } else {
+        db = this.buildFromSeeds();
+      }
+      // 补齐后注册的种子表（新增模块的表）
+      let added = false;
+      for (const t in seeds) {
+        if (!db[t]) { db[t] = U.clone(seeds[t].rows); added = true; }
+      }
+      if (added) persist();
+      return db;
+    },
+    reset() {
+      db = this.buildFromSeeds();
+      return db;
+    },
+    saveNow() { persist(); },
+
+    /* ---------- 读 ---------- */
+    tables() { return Object.keys(db); },
+    all(table) { return db[table] || (db[table] = []); },
+    get(table, id) { return this.all(table).find(r => String(r.id) === String(id)); },
+    find(table, pred) { return this.all(table).find(pred); },
+    filter(table, pred) { return pred ? this.all(table).filter(pred) : this.all(table).slice(); },
+    count(table, pred) { return pred ? this.all(table).filter(pred).length : this.all(table).length; },
+    map(table, fn) { return this.all(table).map(fn); },
+    /* 多条件查询：conds 为字段→值（或数组表示枚举） */
+    query(table, conds) {
+      return this.all(table).filter(r => {
+        for (const k in conds) {
+          let cv = conds[k];
+          if (cv == null || cv === '') continue;
+          if (Array.isArray(cv)) { if (!cv.map(String).includes(String(r[k]))) return false; }
+          else if (String(r[k]) !== String(cv)) return false;
+        }
+        return true;
+      });
+    },
+
+    /* ---------- 写 ---------- */
+    insert(table, rec) {
+      const rows = this.all(table);
+      if (!rec.id) rec.id = U.uid(table);
+      rec.createdAt = rec.createdAt || U.fmtDateTime(new Date());
+      rec.updatedAt = U.fmtDateTime(new Date());
+      rows.push(rec);
+      scheduleSave();
+      return rec;
+    },
+    insertMany(table, list) { list.forEach(r => this.insert(table, r)); return list; },
+    update(table, id, patch) {
+      const rec = this.get(table, id);
+      if (!rec) return null;
+      Object.assign(rec, patch);
+      rec.updatedAt = U.fmtDateTime(new Date());
+      scheduleSave();
+      return rec;
+    },
+    /* 字段级自增（如积分、计数） */
+    inc(table, id, field, n) {
+      const rec = this.get(table, id);
+      if (!rec) return null;
+      rec[field] = (Number(rec[field]) || 0) + (n == null ? 1 : n);
+      rec.updatedAt = U.fmtDateTime(new Date());
+      scheduleSave();
+      return rec;
+    },
+    upsert(table, rec, keyField) {
+      const kf = keyField || 'id';
+      const exist = this.all(table).find(r => String(r[kf]) === String(rec[kf]));
+      if (exist) return this.update(table, exist.id, rec);
+      return this.insert(table, rec);
+    },
+    remove(table, id) {
+      const rows = this.all(table);
+      const i = rows.findIndex(r => String(r.id) === String(id));
+      if (i < 0) return false;
+      rows.splice(i, 1); scheduleSave(); return true;
+    },
+
+    /* ---------- 元数据（定时任务/系统状态） ---------- */
+    meta() { return meta; },
+    getMeta(k, d) { return meta[k] == null ? d : meta[k]; },
+    setMeta(k, v) { meta[k] = v; scheduleSave(); },
+    /* 作业每日只执行一次：返回今日是否已运行 */
+    jobRanToday(jobName) {
+      const jobs = meta.jobs || (meta.jobs = {});
+      return jobs[jobName] === U.today();
+    },
+    markJob(jobName) {
+      const jobs = meta.jobs || (meta.jobs = {});
+      jobs[jobName] = U.today();
+      scheduleSave();
+    }
+  };
+
+  SMS.store = store;
+  window.SMS = SMS;
+})();
+
+
+/* ===== core/auth.js ===== */
+/* =====================================================================
+   core/auth.js — 认证、角色、权限、数据范围
+   - 日常入口为统一登录（模拟 OA/SSO），并保留本系统应急登录
+   - 内置 7 类角色；操作权限 + 数据范围（公司/部门）
+   生产环境对应：统一认证平台 + JWT + RBAC/数据权限（见 PDS）
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS || (window.SMS = {});
+  const U = SMS.util;
+  const SESSION_KEY = 'SMS_SESSION';
+
+  /* 角色常量 */
+  const ROLES = {
+    EMP: '员工',
+    CLEADER: '公司领导',
+    DLEADER: '部门领导',
+    AQLEADER: '安质部领导',
+    INSPECTOR: '安质部监察员',
+    DSAFETY: '部门安全员',
+    ADMIN: '系统管理员'
+  };
+
+  /* 操作权限（动作键）。未列出的角色不具备该动作。 */
+  const ACTIONS = {
+    'policy:publish': [ROLES.CLEADER, ROLES.AQLEADER],
+    'risk:manage': [ROLES.AQLEADER, ROLES.INSPECTOR, ROLES.DSAFETY, ROLES.ADMIN],
+    'risk:accept': [ROLES.CLEADER, ROLES.AQLEADER],
+    'hazard:manage': [ROLES.AQLEADER, ROLES.INSPECTOR, ROLES.DSAFETY, ROLES.ADMIN],
+    'report:audit': [ROLES.AQLEADER, ROLES.INSPECTOR],
+    'report:handle': [ROLES.DSAFETY, ROLES.DLEADER],
+    'investigation:lead': [ROLES.AQLEADER, ROLES.CLEADER],
+    'inspection:plan': [ROLES.AQLEADER, ROLES.INSPECTOR],
+    'inspection:execute': [ROLES.INSPECTOR, ROLES.DSAFETY],
+    'inspection:verify': [ROLES.INSPECTOR, ROLES.AQLEADER, ROLES.DSAFETY],
+    'audit:manage': [ROLES.AQLEADER, ROLES.CLEADER],
+    'performance:manage': [ROLES.AQLEADER, ROLES.INSPECTOR],
+    'training:manage': [ROLES.AQLEADER, ROLES.DSAFETY, ROLES.ADMIN],
+    'exam:manage': [ROLES.AQLEADER, ROLES.DSAFETY],
+    'culture:manage': [ROLES.AQLEADER, ROLES.DSAFETY],
+    'supervision:manage': [ROLES.AQLEADER, ROLES.INSPECTOR, ROLES.DSAFETY],
+    'permit:audit': [ROLES.AQLEADER, ROLES.INSPECTOR],
+    'capability:manage': [ROLES.AQLEADER, ROLES.INSPECTOR],
+    'service:manage': [ROLES.DLEADER, ROLES.DSAFETY],
+    'system:manage': [ROLES.ADMIN]
+  };
+
+  /* 公司级数据范围角色（可见全部部门） */
+  const COMPANY_SCOPED = [ROLES.CLEADER, ROLES.AQLEADER, ROLES.INSPECTOR, ROLES.ADMIN];
+
+  let currentUser = null;
+
+  function loadSession() {
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (raw) currentUser = JSON.parse(raw);
+    } catch (e) {}
+  }
+  function saveSession() {
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser)); } catch (e) {}
+  }
+
+  const auth = {
+    ROLES,
+    /* ---------- 登录 ---------- */
+    /* 应急登录：本地账号密码校验（演示密码以明文存于种子，生产为加盐哈希） */
+    login(account, password) {
+      const user = SMS.store.find('users', u => u.account === account);
+      if (!user) return { ok: false, msg: '账号不存在' };
+      if (user.status === '停用') return { ok: false, msg: '该账号已停用，请联系管理员' };
+      if (user.password !== password) return { ok: false, msg: '密码错误' };
+      currentUser = U.clone(user);
+      currentUser.token = U.uid('TK');
+      currentUser.loginAt = U.fmtDateTime(new Date());
+      saveSession();
+      this.logLogin('应急登录');
+      return { ok: true, user: currentUser };
+    },
+    /* 统一登录（模拟 SSO/OA）：直接以指定演示账号进入，标注“模拟” */
+    ssoLogin(account) {
+      const user = SMS.store.find('users', u => u.account === (account || 'admin'));
+      if (!user) return { ok: false, msg: '统一认证用户未同步' };
+      currentUser = U.clone(user);
+      currentUser.token = U.uid('SSO');
+      currentUser.loginAt = U.fmtDateTime(new Date());
+      currentUser.viaSSO = true;
+      saveSession();
+      this.logLogin('统一登录(模拟)');
+      return { ok: true, user: currentUser };
+    },
+    /* 演示用：切换角色（无需密码），并记录日志 */
+    switchTo(userId) {
+      const user = SMS.store.get('users', userId);
+      if (!user) return { ok: false };
+      currentUser = U.clone(user);
+      currentUser.token = U.uid('TK');
+      currentUser.loginAt = U.fmtDateTime(new Date());
+      saveSession();
+      this.logLogin('角色切换');
+      return { ok: true, user: currentUser };
+    },
+    logout() {
+      if (currentUser) this.logLogin('退出登录');
+      currentUser = null;
+      try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+    },
+    logLogin(action) {
+      try {
+        SMS.store.insert('loginLogs', {
+          userId: currentUser.id, name: currentUser.name, account: currentUser.account,
+          role: currentUser.role, deptId: currentUser.deptId,
+          action, time: U.fmtDateTime(new Date()), ip: '192.168.10.' + (20 + (currentUser.id.length % 80))
+        });
+      } catch (e) {}
+    },
+
+    /* ---------- 状态 ---------- */
+    user() { return currentUser; },
+    isAuthed() { return !!currentUser; },
+    role() { return currentUser ? currentUser.role : null; },
+    isCompanyScope() { return currentUser ? COMPANY_SCOPED.includes(currentUser.role) : false; },
+    /* 数据范围：返回可见部门 id（公司级为 null=全部） */
+    scopeDept() {
+      if (!currentUser) return null;
+      return COMPANY_SCOPED.includes(currentUser.role) ? null : currentUser.deptId;
+    },
+    /* 按数据范围过滤记录（记录含 deptId / 责任部门字段） */
+    scoped(rows, deptField) {
+      const f = deptField || 'deptId';
+      const d = this.scopeDept();
+      if (d == null) return rows;
+      return rows.filter(r => r[f] === d || r.respDeptId === d);
+    },
+
+    /* ---------- 权限判定 ---------- */
+    can(action) {
+      if (!currentUser) return false;
+      const allow = ACTIONS[action] || [];
+      return allow.includes(currentUser.role);
+    },
+    /* 路由/菜单可见：routeDef.roles 缺省为全部可见 */
+    canRoute(routeDef) {
+      if (!currentUser) return false;
+      if (!routeDef || !routeDef.roles || !routeDef.roles.length) return true;
+      return routeDef.roles.includes(currentUser.role);
+    },
+    /* 便捷：是否任一角色 */
+    hasRole() {
+      if (!currentUser) return false;
+      return [].slice.call(arguments).includes(currentUser.role);
+    }
+  };
+
+  SMS.auth = auth;
+  loadSession();
+  window.SMS = SMS;
+})();
+
+
+/* ===== core/ui.js ===== */
+/* =====================================================================
+   core/ui.js — 共享 UI 组件库
+   el / icon / toast / modal / form / crudPage / detail / tabs /
+   timeline / approvalSteps / chart / statCard / badge / empty / pager
+   所有业务模块统一使用本库，保证视觉与交互一致。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS || (window.SMS = {});
+  const U = SMS.util;
+  const el = U.el;
+
+  /* 调色板（图表） */
+  const PALETTE = ['#1F4E79', '#2E6B5E', '#E8833A', '#2E75B6', '#7A9E7E', '#C9A227', '#9B6A9E', '#B45A48'];
+  const LEVEL_COLORS = { '可忽略': '#7FB069', '低度': '#9CC3A0', '中度': '#E0A024', '高度': '#E8833A', '不可接受': '#C0392B' };
+
+  /* ============ 图标（24x24 线性，Feather 风格） ============ */
+  const PATHS = {
+    home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>',
+    dashboard: '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+    shield: '<path d="M12 3l8 3v6c0 5-3.5 7.8-8 9-4.5-1.2-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>',
+    policy: '<path d="M12 3l8 3v6c0 5-3.5 7.8-8 9-4.5-1.2-8-4-8-9V6l8-3z"/><path d="M12 8v4"/><path d="M12 15.5h.01"/>',
+    alert: '<path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',
+    risk: '<path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',
+    check: '<path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/>',
+    clipboard: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 11h6M9 15h4"/>',
+    graduation: '<path d="M12 4 1 9l11 5 9-4.1V15"/><path d="M5 11.5V16c0 1.5 3 2.5 7 2.5s7-1 7-2.5v-4.5"/>',
+    message: '<path d="M21 12a8 8 0 0 1-8 8H4l1.5-3.2A8 8 0 1 1 21 12z"/>',
+    id: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.4 1.8-2 3-2s2.4.6 3 2"/><path d="M15 10h3M15 13h3"/>',
+    star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/>',
+    headset: '<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M20 19v1a3 3 0 0 1-3 3h-3"/>',
+    siren: '<path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 18h14v3H5z"/><path d="M12 3v2M4.5 6l1.4 1.4M19.5 6l-1.4 1.4"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
+    database: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+    mobile: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+    bell: '<path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.5 20a1.8 1.8 0 0 0 3 0"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+    users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5 6.5-5s6.5 1.5 6.5 5"/><path d="M16 5a3.5 3.5 0 0 1 0 6.8"/><path d="M17.5 15c2.5.5 4 2 4 5"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
+    trash: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+    close: '<path d="M18 6 6 18M6 6l12 12"/>',
+    download: '<path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 21h16"/>',
+    refresh: '<path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/>',
+    flow: '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M9 6h6a3 3 0 0 1 3 3v6"/>',
+    flag: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+    book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 22H20v-5"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>',
+    chart: '<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-7"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/>',
+    organization: '<rect x="9" y="2" width="6" height="5" rx="1"/><rect x="3" y="17" width="6" height="5" rx="1"/><rect x="15" y="17" width="6" height="5" rx="1"/><path d="M12 7v4M6 21v-3h12v3M6 18h12"/>',
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+    doc: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/>',
+    camera: '<path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.2"/>',
+    mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>',
+    sparkle: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z"/>',
+    filter: '<path d="M3 5h18l-7 8v6l-4-2v-4L3 5z"/>',
+    send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    folder: '<path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"/>',
+    award: '<circle cx="12" cy="9" r="6"/><path d="M9 14.5 7.5 22 12 19.5 16.5 22 15 14.5"/>',
+    thumbup: '<path d="M7 11v9H4a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3z"/><path d="M7 11l4-8a2.5 2.5 0 0 1 3 2.4V9h5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7"/>',
+    plane: '<path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>'
+  };
+  function icon(name, size) {
+    const p = PATHS[name] || PATHS.doc;
+    return '<svg width="' + (size || 16) + '" height="' + (size || 16) + '" viewBox="0 0 24 24" fill="none" ' +
+      'stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>';
+  }
+
+  /* ============ Toast ============ */
+  function toast(msg, type, ms) {
+    let wrap = U.qs('.toast-wrap');
+    if (!wrap) { wrap = el('div', { class: 'toast-wrap' }); document.body.appendChild(wrap); }
+    const ic = type === 'ok' ? icon('check') : type === 'err' ? icon('alert') : type === 'warn' ? icon('bell') : icon('sparkle');
+    const t = el('div', { class: 'toast ' + (type || '') }, [el('span', { html: ic }), el('span', { text: msg })]);
+    wrap.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 320); }, ms || 2400);
+  }
+
+  /* ============ Modal ============ */
+  function modal(opts) {
+    const mask = el('div', { class: 'modal-mask' });
+    const m = el('div', { class: 'modal ' + (opts.size || '') });
+    const head = el('div', { class: 'modal-h' }, [
+      el('div', { class: 't', html: (opts.icon ? icon(opts.icon) + ' ' : '') + U.escapeHtml(opts.title || '') }),
+      el('button', { class: 'modal-x', html: icon('close'), onClick: close })
+    ]);
+    const body = el('div', { class: 'modal-b' });
+    if (opts.bodyHtml) body.innerHTML = opts.bodyHtml;
+    if (opts.body) opts.body.appendChild ? body.appendChild(opts.body) : body.appendChild(opts.body);
+    m.appendChild(head); m.appendChild(body);
+    let foot = null;
+    if (opts.footer !== false) {
+      foot = el('div', { class: 'modal-f' });
+      const cancel = el('button', { class: 'btn', text: opts.cancelText || '取消', onClick: close });
+      foot.appendChild(cancel);
+      (opts.buttons || []).forEach(b => foot.appendChild(b));
+      if (opts.okText) {
+        const ok = el('button', { class: 'btn btn-primary', text: opts.okText });
+        ok.addEventListener('click', () => { if (opts.onOk ? opts.onOk(body, close) : true) {} });
+        foot.appendChild(ok);
+      }
+      m.appendChild(foot);
+    }
+    mask.appendChild(m);
+    mask.addEventListener('mousedown', e => { if (e.target === mask && opts.maskClose !== false) close(); });
+    function close() {
+      mask.style.opacity = '0';
+      document.body.removeChild(mask);
+      if (opts.onClose) opts.onClose();
+      document.removeEventListener('keydown', esc);
+    }
+    function esc(e) { if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', esc);
+    document.body.appendChild(mask);
+    return { mask, modal: m, body, close, setTitle(t) { head.querySelector('.t').textContent = t; } };
+  }
+
+  /* ============ 表单 ============ */
+  function optionsArr(o) {
+    if (typeof o === 'function') o = o();
+    if (!o) return [];
+    return o.map(x => (U.isObject(x) ? x : { value: x, label: String(x) }));
+  }
+  function renderForm(fields, values) {
+    values = values || {};
+    const grid = el('div', { class: 'form-grid' });
+    const ctrls = {};
+    fields.forEach(f => {
+      if (f.show && !f.show(values)) return;
+      const item = el('div', { class: 'f-item' + (f.span === 2 ? ' span2' : '') });
+      const lab = el('label', { html: (f.required ? '<span class="req">*</span>' : '') + U.escapeHtml(f.label || f.field) });
+      item.appendChild(lab);
+      let c;
+      const v = values[f.field] != null ? values[f.field] : (f.default != null ? f.default : '');
+      if (f.type === 'textarea') {
+        c = el('textarea', { placeholder: f.placeholder || '' }); c.value = v;
+      } else if (f.type === 'select') {
+        c = el('select');
+        if (!f.required) c.appendChild(el('option', { value: '', text: f.placeholder || '请选择' }));
+        optionsArr(f.options).forEach(o => {
+          const op = el('option', { value: o.value, text: o.label });
+          if (String(o.value) === String(v)) op.selected = true;
+          c.appendChild(op);
+        });
+      } else if (f.type === 'radio') {
+        c = el('div', { class: 'nowrap', style: { display: 'flex', gap: '14px', padding: '8px 0' } });
+        optionsArr(f.options).forEach(o => {
+          const labr = el('label', { class: 'nowrap', style: { display: 'flex', gap: '5px', alignItems: 'center', fontSize: '12.5px' } });
+          const r = el('input', { type: 'radio', name: f.field, value: o.value });
+          if (String(o.value) === String(v)) r.checked = true;
+          labr.appendChild(r); labr.appendChild(document.createTextNode(o.label)); c.appendChild(labr);
+        });
+      } else if (f.type === 'switch') {
+        c = el('input', { type: 'checkbox' }); c.checked = !!v;
+      } else if (f.type === 'readonly') {
+        c = el('input', { class: 'f-readonly', readonly: true, value: v });
+      } else if (f.type === 'button') {
+        c = el('button', { type: 'button', class: 'btn ' + (f.cls || 'btn-teal'), html: (f.icon ? icon(f.icon) + ' ' : '') + (f.text || '操作'), style: f.span === 2 ? { width: '100%', justifyContent: 'center' } : {} });
+        c.addEventListener('click', function () { if (f.onClick) f.onClick(api); });
+      } else {
+        c = el('input', { type: f.type === 'number' ? 'number' : (f.type || 'text'), placeholder: f.placeholder || '' });
+        if (f.min != null) c.min = f.min; if (f.max != null) c.max = f.max; if (f.step) c.step = f.step;
+        c.value = v;
+        if (f.readonly) c.readOnly = true;
+      }
+      if (f.onChange) c.addEventListener('change', () => f.onChange(c.value, api));
+      item.appendChild(c);
+      if (f.help) item.appendChild(el('div', { class: 'help', text: f.help }));
+      const em = el('div', { class: 'errmsg' }); item.appendChild(em);
+      grid.appendChild(item);
+      ctrls[f.field] = { def: f, el: c, item, em };
+    });
+    const api = {
+      el: grid,
+      rec() {
+        const r = {};
+        for (const k in ctrls) {
+          const c = ctrls[k].el, t = ctrls[k].def.type;
+          let val;
+          if (t === 'switch') val = c.checked;
+          else if (t === 'radio') { const checked = grid.querySelector('input[name="' + k + '"]:checked'); val = checked ? checked.value : ''; }
+          else if (t === 'number') val = c.value === '' ? null : Number(c.value);
+          else val = c.value;
+          r[k] = val;
+        }
+        return r;
+      },
+      validate() {
+        let ok = true;
+        for (const k in ctrls) {
+          const { def, el: c, item, em } = ctrls[k];
+          item.classList.remove('err'); em.textContent = '';
+          let val = c.value;
+          if (def.type === 'switch') val = c.checked;
+          if (def.required && (val === '' || val == null)) { item.classList.add('err'); em.textContent = '此项为必填'; ok = false; }
+          else if (def.type === 'number' && c.value !== '' && def.min != null && Number(c.value) < def.min) { item.classList.add('err'); em.textContent = '不能小于 ' + def.min; ok = false; }
+          else if (def.type === 'number' && c.value !== '' && def.max != null && Number(c.value) > def.max) { item.classList.add('err'); em.textContent = '不能大于 ' + def.max; ok = false; }
+        }
+        return ok;
+      },
+      set(k, v) { if (ctrls[k]) ctrls[k].el.value = v; },
+      ctrls
+    };
+    return api;
+  }
+
+  /* ============ Badge / Stat / Progress ============ */
+  function badge(text, tone, strong) { return el('span', { class: 'badge ' + (tone || '') + (strong ? ' strong' : ''), text: text == null ? '-' : text }); }
+  function levelBadge(level) {
+    const map = { '低': 'blue', '可忽略': 'teal', '低度': 'teal', '中等': 'yellow', '中度': 'yellow', '高': 'orange', '高度': 'orange', '不可接受': 'red', '重大': 'red' };
+    return badge(level, map[level] || '');
+  }
+  function progress(p, tone) {
+    const wrap = el('div', { class: 'progress ' + (tone || '') });
+    wrap.appendChild(el('i', { style: { width: U.clamp(p, 0, 100) + '%' } }));
+    return wrap;
+  }
+  function statCard(o) {
+    const sic = el('div', { class: 'sic', style: { background: (o.toneBg || 'var(--brand-soft)'), color: o.tone || 'var(--brand)' }, html: icon(o.icon || 'dashboard', 21) });
+    const right = el('div', { style: { flex: '1', minWidth: '0' } }, [
+      el('div', { class: 'sv', text: o.value }),
+      el('div', { class: 'sl', text: o.label }),
+      o.sub != null ? el('div', { class: 'ss ' + (o.dir || ''), html: o.sub }) : null
+    ]);
+    const card = el('div', { class: 'stat-card' }, [el('div', { class: 'bar', style: { background: o.tone || 'var(--brand)' } }), sic, right]);
+    return card;
+  }
+
+  /* ============ Tabs ============ */
+  function tabs(opts) {
+    const wrap = el('div');
+    const bar = el('div', { class: 'tabs' });
+    const body = el('div');
+    const btns = {};
+    opts.tabs.forEach((t, i) => {
+      const cnt = t.count != null ? '<span class="cnt">' + t.count + '</span>' : '';
+      const b = el('button', { html: U.escapeHtml(t.label) + cnt });
+      b.addEventListener('click', () => select(t.key));
+      bar.appendChild(b); btns[t.key] = b;
+    });
+    function select(key) {
+      for (const k in btns) btns[k].classList.toggle('active', k === key);
+      U.clear(body);
+      const t = opts.tabs.find(x => x.key === key);
+      const r = t.render(body);
+      if (r) body.appendChild(r);
+      if (opts.onChange) opts.onChange(key);
+    }
+    wrap.appendChild(bar); wrap.appendChild(body);
+    select(opts.active || opts.tabs[0].key);
+    return wrap;
+  }
+
+  /* ============ Timeline / Approval ============ */
+  function timeline(items) {
+    const tl = el('div', { class: 'timeline' });
+    items.forEach(it => {
+      const i = el('div', { class: 'tl-item ' + (it.state || '') }, [
+        el('div', { class: 'node' }),
+        el('div', { class: 'tl-t' }, [document.createTextNode(it.title), it.tag ? el('span', { class: 'tl-tag' }, [it.tag]) : null]),
+        el('div', { class: 'tl-m', html: it.meta || '' })
+      ]);
+      tl.appendChild(i);
+    });
+    return tl;
+  }
+  function approvalSteps(steps, current) {
+    const wrap = el('div', { class: 'approval-steps' });
+    steps.forEach((s, i) => {
+      const st = i < current ? 'done' : i === current ? 'current' : '';
+      const step = el('div', { class: 'approval-step ' + st }, [
+        el('div', { class: 'as-no', text: '环节 ' + (i + 1) }),
+        el('div', { class: 'as-t', text: s.title }),
+        el('div', { class: 'as-m', html: s.meta || '' })
+      ]);
+      wrap.appendChild(step);
+    });
+    return wrap;
+  }
+
+  /* ============ 图表 ============ */
+  const chartInsts = [];
+  function chart(node, option) {
+    if (!window.echarts) { node.appendChild(el('div', { class: 'empty', text: '图表库未加载' })); return null; }
+    const c = echarts.init(node);
+    c.setOption(option);
+    chartInsts.push(c);
+    return c;
+  }
+  function baseOption(o) {
+    return Object.assign({
+      color: PALETTE,
+      textStyle: { fontFamily: 'Microsoft YaHei', fontSize: 11, color: '#4A5563' },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 44, right: 18, top: 38, bottom: 30, containLabel: true },
+      legend: { top: 4, textStyle: { fontSize: 11 } }
+    }, o);
+  }
+  window.addEventListener('resize', U.debounce(() => chartInsts.forEach(c => { try { c.resize(); } catch (e) {} }), 200));
+
+  /* ============ 空态 ============ */
+  function empty(text, sub) {
+    return el('div', { class: 'empty' }, [
+      el('span', { html: icon('search', 34) }),
+      el('div', { class: 'et', text: text || '暂无数据' }),
+      sub ? el('div', { class: 'es', text: sub }) : null
+    ]);
+  }
+
+  /* ============ 详情描述列表 ============ */
+  function descList(items, cols) {
+    const wrap = el('div', { class: 'desc-list' + (cols === 1 ? ' full' : '') });
+    items.forEach(it => {
+      const di = el('div', { class: 'di' + (it.full ? ' full' : '') }, [
+        el('div', { class: 'dt', text: it.label }),
+        el('div', { class: 'dd', html: it.valueDom ? '' : (it.value == null || it.value === '' ? '—' : U.escapeHtml(String(it.value))) })
+      ]);
+      if (it.valueDom) di.querySelector('.dd').appendChild(it.valueDom);
+      wrap.appendChild(di);
+    });
+    return wrap;
+  }
+
+  /* ============ CRUD 页面工厂 ============ */
+  function crudPage(cfg) {
+    const root = el('div');
+    const state = { filters: {}, page: 1, sort: cfg.defaultSort || null, selected: new Set() };
+    const pageSize = cfg.pageSize || 10;
+
+    function getData() {
+      let rows = cfg.data ? cfg.data() : SMS.store.all(cfg.table);
+      rows = rows.filter(r => {
+        for (const f of cfg.filters || []) {
+          const v = state.filters[f.field];
+          if (v == null || v === '') continue;
+          if (f.type === 'text') {
+            const tv = String(r[f.field] == null ? '' : r[f.field]);
+            if (tv.toLowerCase().indexOf(String(v).toLowerCase()) < 0) return false;
+          } else if (String(r[f.field]) !== String(v)) return false;
+        }
+        return true;
+      });
+      if (state.sort) {
+        rows = U.sortBy(rows, state.sort.field, state.sort.dir);
+      }
+      return rows;
+    }
+
+    function head() {
+      const h = el('div', { class: 'page-head' }, [
+        el('div', null, [
+          el('h2', { html: (cfg.icon ? icon(cfg.icon, 19) + ' ' : '') + U.escapeHtml(cfg.title) }),
+          cfg.subtitle ? el('div', { class: 'desc', text: cfg.subtitle }) : null
+        ]),
+        el('div', { class: 'actions' })
+      ]);
+      const act = h.querySelector('.actions');
+      if (cfg.extraActions) cfg.extraActions.forEach(a => act.appendChild(btnFrom(a)));
+      if (cfg.exportable !== false) {
+        act.appendChild(el('button', { class: 'btn', html: icon('download') + ' 导出', onClick: doExport }));
+      }
+      const addable = cfg.addable == null ? true : (typeof cfg.addable === 'function' ? cfg.addable() : cfg.addable);
+      if (addable && cfg.fields) {
+        act.appendChild(el('button', { class: 'btn btn-primary', html: icon('plus') + ' ' + (cfg.addText || '新增'), onClick: () => openForm(null) }));
+      }
+      return h;
+    }
+    function btnFrom(a) {
+      const b = el('button', { class: 'btn ' + (a.cls || ''), html: (a.icon ? icon(a.icon) + ' ' : '') + a.label, onClick: a.onClick });
+      return b;
+    }
+
+    function filterBar() {
+      if (!cfg.filters || !cfg.filters.length) return null;
+      const bar = el('div', { class: 'filter-bar' });
+      cfg.filters.forEach(f => {
+        const fi = el('div', { class: 'filter-item' }, [el('label', { text: f.label })]);
+        let c;
+        if (f.type === 'select') {
+          c = el('select');
+          c.appendChild(el('option', { value: '', text: '全部' }));
+          optionsArr(f.options).forEach(o => c.appendChild(el('option', { value: o.value, text: o.label })));
+        } else if (f.type === 'date') { c = el('input', { type: 'date' }); }
+        else { c = el('input', { placeholder: f.placeholder || '关键字' }); }
+        c.value = state.filters[f.field] || '';
+        c.addEventListener('input', () => { state.filters[f.field] = c.value; state.page = 1; render(); });
+        c.addEventListener('change', () => { state.filters[f.field] = c.value; state.page = 1; render(); });
+        fi.appendChild(c); bar.appendChild(fi);
+      });
+      const fa = el('div', { class: 'filter-actions' }, [
+        el('button', { class: 'btn btn-primary btn-sm', html: icon('search') + ' 查询', onClick: render }),
+        el('button', { class: 'btn btn-sm', html: icon('refresh') + ' 重置', onClick: () => { state.filters = {}; state.page = 1; render(); } })
+      ]);
+      bar.appendChild(fa);
+      return bar;
+    }
+
+    function cellVal(col, row) {
+      if (col.render) {
+        const r = col.render(row[col.field], row);
+        return r == null ? '—' : r;
+      }
+      if (col.badge) {
+        const tone = typeof col.badge === 'function' ? col.badge(row[col.field], row) : col.badge;
+        return badge(row[col.field], tone);
+      }
+      const v = row[col.field];
+      return v == null || v === '' ? '—' : String(v);
+    }
+
+    function tableBlock(rows) {
+      const wrap = el('div', { class: 'table-wrap' });
+      const tool = el('div', { class: 'table-tool' }, [
+        el('span', { class: 't', text: cfg.tableTitle || cfg.title }),
+        el('span', { class: 'small muted', text: '共 ' + rows.length + ' 条' })
+      ]);
+      wrap.appendChild(tool);
+      const scroll = el('div', { class: 'table-scroll' });
+      const t = el('table', { class: 'dt' });
+      const thead = el('tr');
+      cfg.columns.forEach(c => thead.appendChild(el('th', { text: c.title, style: c.width ? { width: c.width } : {} })));
+      if (cfg.actions && cfg.actions.length) thead.appendChild(el('th', { class: 'col-act', text: '操作', style: { width: cfg.actWidth || '150px' } }));
+      const theadWrap = el('thead'); theadWrap.appendChild(thead); t.appendChild(theadWrap);
+      const tbody = el('tbody');
+      const pageRows = rows.slice((state.page - 1) * pageSize, state.page * pageSize);
+      if (!pageRows.length) {
+        const tr = el('tr'), td = el('td', { colspan: cfg.columns.length + (cfg.actions ? 1 : 0) });
+        td.appendChild(empty(cfg.emptyText || '未查询到符合条件的记录'));
+        tr.appendChild(td); tbody.appendChild(tr);
+      }
+      pageRows.forEach(row => {
+        const tr = el('tr', { class: cfg.rowClass ? cfg.rowClass(row) : '' });
+        cfg.columns.forEach(c => {
+          const td = el('td');
+          const cv = cellVal(c, row);
+          if (cv.nodeType) td.appendChild(cv); else td.innerHTML = cv;
+          if (c.click) td.style.cursor = 'pointer', td.addEventListener('click', () => c.click(row));
+          tr.appendChild(td);
+        });
+        if (cfg.actions && cfg.actions.length) {
+          const td = el('td', { class: 'col-act' });
+          cfg.actions.forEach(a => {
+            if (a.show && !a.show(row)) return;
+            const lk = el('span', { class: 'act-link' + (a.tone === 'danger' ? ' danger' : ''), text: a.label });
+            lk.addEventListener('click', e => { e.stopPropagation(); a.onClick(row, render); });
+            td.appendChild(lk);
+          });
+          tr.appendChild(td);
+        }
+        if (cfg.rowClick) tr.addEventListener('click', () => cfg.rowClick(row, render));
+        tbody.appendChild(tr);
+      });
+      t.appendChild(tbody);
+      scroll.appendChild(t); wrap.appendChild(scroll);
+      if (rows.length > pageSize) wrap.appendChild(pager(rows.length));
+      return wrap;
+    }
+    function pager(total) {
+      const pages = Math.ceil(total / pageSize);
+      const p = el('div', { class: 'pager' }, [el('span', { text: '第 ' + state.page + '/' + pages + ' 页' })]);
+      const prev = el('button', { html: '‹', disabled: state.page === 1 });
+      prev.addEventListener('click', () => { state.page--; render(); });
+      p.appendChild(prev);
+      const maxBtn = Math.min(pages, 7);
+      let start = Math.max(1, Math.min(state.page - 3, pages - maxBtn + 1));
+      for (let i = 0; i < maxBtn; i++) {
+        const n = start + i;
+        const b = el('button', { class: n === state.page ? 'cur' : '', text: n });
+        b.addEventListener('click', () => { state.page = n; render(); });
+        p.appendChild(b);
+      }
+      const next = el('button', { html: '›', disabled: state.page === pages });
+      next.addEventListener('click', () => { state.page++; render(); });
+      p.appendChild(next);
+      return p;
+    }
+
+    function openForm(row) {
+      const isEdit = !!row;
+      const f = renderForm(cfg.fields, row ? U.clone(row) : (cfg.defaultRec || {}));
+      const m = modal({
+        title: (isEdit ? '编辑' : '新增') + (cfg.formTitle || cfg.title),
+        icon: isEdit ? 'edit' : 'plus', size: cfg.formSize || '', body: f.el,
+        okText: '保存',
+        onOk: (body, close) => {
+          if (!f.validate()) return;
+          const rec = f.rec();
+          if (cfg.onBeforeSave && cfg.onBeforeSave(rec, isEdit ? 'edit' : 'add', row) === false) return;
+          if (cfg.table) {
+            if (isEdit) SMS.store.update(cfg.table, row.id, rec);
+            else SMS.store.insert(cfg.table, rec);
+          }
+          if (cfg.onSaved) cfg.onSaved(rec, isEdit ? 'edit' : 'add', row);
+          toast((isEdit ? '已更新' : '已新增') + cfg.title, 'ok');
+          close(); render();
+        }
+      });
+    }
+    function openDetail(row) {
+      if (!cfg.detail) return;
+      const d = cfg.detail;
+      const body = el('div');
+      const items = (d.fields || cfg.fields || []);
+      if (items) {
+        body.appendChild(descList(items.map(f => ({
+          label: f.label || f.field, value: row[f.field], full: f.span === 2 || f.type === 'textarea'
+        }))));
+      }
+      if (d.render) { const r = d.render(row); if (r) body.appendChild(el('div', { class: 'mt' }, [r])); }
+      modal({ title: (typeof d.title === 'function' ? d.title(row) : d.title) || (cfg.title + '详情'), icon: 'eye', size: d.size || 'lg', body, footer: d.footer });
+    }
+
+    function doExport() {
+      const rows = getData();
+      U.exportCSV(cfg.title + '.csv', cfg.columns, rows);
+      toast('已导出 CSV', 'ok');
+    }
+
+    function render() {
+      U.clear(root);
+      root.appendChild(head());
+      const fb = filterBar(); if (fb) root.appendChild(fb);
+      if (cfg.above) { const a = cfg.above(); if (a) root.appendChild(a); }
+      const rows = getData();
+      root.appendChild(tableBlock(rows));
+      if (cfg.below) { const b = cfg.below(rows); if (b) root.appendChild(b); }
+      return root;
+    }
+
+    // 默认行点击=详情
+    if (cfg.rowClick === undefined && cfg.detail) cfg.rowClick = (row) => openDetail(row);
+
+    root.appendChild(render());
+    return { el: root, render };
+  }
+
+  /* ============ 导出 ============ */
+  SMS.ui = {
+    el, icon, PATHS, toast, modal, renderForm, crudPage, badge, levelBadge, progress, statCard,
+    tabs, timeline, approvalSteps, chart, baseOption, empty, descList, PALETTE, LEVEL_COLORS, optionsArr
+  };
+  window.SMS = SMS;
+})();
+
+
+/* ===== core/router.js ===== */
+/* =====================================================================
+   core/router.js — 模块注册 + 哈希路由 + 导航分组
+   registerModule({id, menus:[{group,name,icon,route,roles,order}],
+                   routes:[{path,name,roles,render}]})
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS || (window.SMS = {});
+  const U = SMS.util;
+  const el = U.el;
+
+  /* 导航分组（顺序即展示顺序；仅当组内有可见菜单时显示） */
+  const GROUPS = [
+    { key: 'home', name: '首页', icon: 'dashboard' },
+    { key: 'workbench', name: '工作台', icon: 'home' },
+    { key: 'policy', name: '安全政策与目标', icon: 'policy' },
+    { key: 'risk', name: '安全风险管理', icon: 'risk' },
+    { key: 'assurance', name: '安全保证', icon: 'shield' },
+    { key: 'promotion', name: '安全促进', icon: 'graduation' },
+    { key: 'permit', name: '机场通行证', icon: 'id' },
+    { key: 'capability', name: '保障能力评估', icon: 'star' },
+    { key: 'service', name: '服务管理', icon: 'headset' },
+    { key: 'emergency', name: '应急救援', icon: 'siren' },
+    { key: 'mobile', name: '移动端', icon: 'mobile' },
+    { key: 'master', name: '基础信息', icon: 'database' },
+    { key: 'system', name: '系统管理', icon: 'gear' }
+  ];
+
+  const modules = [];
+  const routes = [];
+  let contentEl = null;
+  let current = null;
+
+  function registerModule(def) {
+    modules.push(def);
+    (def.routes || []).forEach(r => routes.push(Object.assign({ moduleId: def.id }, r)));
+  }
+
+  function matchRoute(path) {
+    const segs = path.split('/').filter(Boolean);
+    for (const r of routes) {
+      const rsegs = r.path.split('/').filter(Boolean);
+      if (rsegs.length !== segs.length) continue;
+      const params = {}; let ok = true;
+      for (let i = 0; i < rsegs.length; i++) {
+        if (rsegs[i].startsWith(':')) params[rsegs[i].slice(1)] = decodeURIComponent(segs[i]);
+        else if (rsegs[i] !== segs[i]) { ok = false; break; }
+      }
+      if (ok) return { def: r, params };
+    }
+    return null;
+  }
+
+  /* 收集当前用户可见的菜单 */
+  function visibleMenus() {
+    const list = [];
+    modules.forEach(m => (m.menus || []).forEach(menu => {
+      const routeDef = routes.find(r => r.path === menu.route);
+      if (SMS.auth.canRoute(routeDef || { roles: menu.roles })) list.push(menu);
+    }));
+    return list;
+  }
+
+  function buildSidebar() {
+    const nav = U.qs('.side-nav');
+    U.clear(nav);
+    const menus = visibleMenus();
+    GROUPS.forEach(g => {
+      const items = menus.filter(m => m.group === g.key).sort((a, b) => (a.order || 99) - (b.order || 99));
+      if (!items.length) return;
+      const grp = el('div', { class: 'nav-group' }, [
+        el('div', { class: 'grp-title', html: SMS.ui.icon(g.icon, 14) + ' ' + g.name })
+      ]);
+      items.forEach(it => {
+        const item = el('div', { class: 'nav-item', dataset: { route: it.route } }, [
+          el('span', { class: 'nicon', html: SMS.ui.icon(it.icon || g.icon, 15) }),
+          el('span', { text: it.name })
+        ]);
+        item.addEventListener('click', () => go(it.route));
+        grp.appendChild(item);
+      });
+      nav.appendChild(grp);
+    });
+    highlight();
+  }
+
+  function highlight() {
+    const path = currentPath();
+    U.qsa('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.route === path));
+  }
+
+  function currentPath() {
+    const h = location.hash.replace(/^#\/?/, '');
+    return h.split('/').length >= 2 ? h.split('/').slice(0, 2).join('/') : h;
+  }
+
+  function setCrumb(matched) {
+    const bar = U.qs('.crumb');
+    if (!bar) return;
+    U.clear(bar);
+    const g = GROUPS.find(x => x.key === (matched.def.group || ''));
+    bar.appendChild(el('span', { text: 'SMS' }));
+    if (g) { bar.appendChild(el('span', { text: '/' })); bar.appendChild(el('span', { text: g.name })); }
+    bar.appendChild(el('span', { text: '/' }));
+    bar.appendChild(el('span', { class: 'cur', text: matched.def.name || matched.def.path }));
+  }
+
+  function render() {
+    const path = location.hash.replace(/^#\/?/, '') || 'home/company';
+    const matched = matchRoute(path);
+    if (!matched) {
+      U.clear(contentEl);
+      contentEl.appendChild(SMS.ui.empty('页面不存在（404）', '请从左侧菜单进入功能页面'));
+      return;
+    }
+    if (!SMS.auth.canRoute(matched.def)) {
+      U.clear(contentEl);
+      const e = SMS.ui.empty('无访问权限（403）', '当前角色无权访问该页面，可在顶部切换角色');
+      contentEl.appendChild(e);
+      setCrumb(matched);
+      return;
+    }
+    current = matched;
+    U.clear(contentEl);
+    const node = matched.def.render({ params: matched.params, route: matched.def });
+    if (node) contentEl.appendChild(node.nodeType ? node : (function(){const w=el('div');w.appendChild(node);return w;})());
+    setCrumb(matched);
+    highlight();
+    window.scrollTo(0, 0);
+  }
+
+  function go(path) {
+    if (('#/' + path) === location.hash) render();
+    else location.hash = '#/' + path;
+  }
+  function refresh() { render(); }
+
+  function mount(el2) { contentEl = el2; window.addEventListener('hashchange', render); }
+
+  SMS.registerModule = registerModule;
+  SMS.router = { mount, go, refresh, render, GROUPS, modules, visibleMenus, buildSidebar, matchRoute, current: () => current };
+  window.SMS = SMS;
+})();
+
+
+/* ===== data/seed.core.js ===== */
+/* =====================================================================
+   data/seed.core.js — 核心预置数据（演示机场：云川国际机场，虚构）
+   覆盖：组织机构 / 岗位 / 用户 / 设施设备 / 危险源 / 隐患 /
+        自愿·强制报告 / 安全通告 / 待办 / 培训与考试 / 字典
+   风险分级（默认、可配置）：
+     风险值=可能性L×严重性S；1-2 可忽略 / 3-4 低度 / 5-9 中度 /
+     10-15 高度 / 16-25 不可接受
+   生产环境通过数据导入模板初始化（见 H5）。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS;
+  const S = SMS.store;
+
+  function levelOf(v) {
+    if (v <= 2) return { level: '可忽略', tone: 'teal', accept: '可接受' };
+    if (v <= 4) return { level: '低度', tone: 'blue', accept: '可接受' };
+    if (v <= 9) return { level: '中度', tone: 'yellow', accept: '缓解后可接受' };
+    if (v <= 15) return { level: '高度', tone: 'orange', accept: '不可接受' };
+    return { level: '不可接受', tone: 'red', accept: '不可接受' };
+  }
+  function hz(o) {
+    const L = o.L, SE = o.S;
+    const v = L * SE; const g = levelOf(v);
+    return Object.assign({
+      riskValue: v, level: g.level, levelTone: g.tone, accept: g.accept,
+      monitorState: '在控', status: '有效', isWarn: v >= 10 || (o.triggerCount || 0) >= 3,
+      triggerCount: 0, warnValue: 10
+    }, o);
+  }
+
+  /* ================= 1. 组织机构 ================= */
+  const departments = [
+    { id: 'dept-root', name: '云川国际机场', parentId: '', level: 0, deptType: '公司', leader: '张建国' },
+    { id: 'dept-aq', name: '安全质量部', parentId: 'dept-root', level: 1, deptType: '安全管理', leader: '李安民' },
+    { id: 'dept-oc', name: '运行指挥中心', parentId: 'dept-root', level: 1, deptType: '一线', leader: '陈志远' },
+    { id: 'dept-ar', name: '飞行区管理部', parentId: 'dept-root', level: 1, deptType: '一线', leader: '马道面' },
+    { id: 'dept-gs', name: '地面服务部', parentId: 'dept-root', level: 1, deptType: '一线', leader: '孙德明' },
+    { id: 'dept-sc', name: '安检护卫部', parentId: 'dept-root', level: 1, deptType: '一线', leader: '卫国强' },
+    { id: 'dept-eq', name: '设备信息部', parentId: 'dept-root', level: 1, deptType: '职能', leader: '王运维' },
+    { id: 'dept-er', name: '应急救援部', parentId: 'dept-root', level: 1, deptType: '一线', leader: '雷急救' },
+    { id: 'dept-ho', name: '综合管理部', parentId: 'dept-root', level: 1, deptType: '职能', leader: '何行政' },
+    { id: 'dept-fi', name: '计划财务部', parentId: 'dept-root', level: 1, deptType: '职能', leader: '钱会计' }
+  ];
+
+  /* ================= 2. 岗位 ================= */
+  const posts = [
+    { id: 'post-gm', name: '总经理', deptId: 'dept-root' },
+    { id: 'post-vgm', name: '副总经理', deptId: 'dept-root' },
+    { id: 'post-sm', name: '安全总监(安全经理)', deptId: 'dept-aq', important: true },
+    { id: 'post-insp', name: '安全监察员', deptId: 'dept-aq' },
+    { id: 'post-aqadmin', name: '安全管理员', deptId: 'dept-aq' },
+    { id: 'post-oc', name: '运行指挥员', deptId: 'dept-oc', important: true },
+    { id: 'post-apron', name: '机坪管制员', deptId: 'dept-oc' },
+    { id: 'post-field', name: '场务巡视员', deptId: 'dept-ar' },
+    { id: 'post-bird', name: '鸟害防治员', deptId: 'dept-ar' },
+    { id: 'post-checkin', name: '值机员', deptId: 'dept-gs' },
+    { id: 'post-load', name: '配载员', deptId: 'dept-gs', important: true },
+    { id: 'post-pax', name: '客运服务员', deptId: 'dept-gs' },
+    { id: 'post-cargo', name: '货运员', deptId: 'dept-gs' },
+    { id: 'post-sec', name: '安检员', deptId: 'dept-sc' },
+    { id: 'post-guard', name: '护卫员', deptId: 'dept-sc' },
+    { id: 'post-eq', name: '设备维护员', deptId: 'dept-eq' },
+    { id: 'post-it', name: '信息系统维护员', deptId: 'dept-eq' },
+    { id: 'post-fire', name: '消防员', deptId: 'dept-er' },
+    { id: 'post-med', name: '急救员', deptId: 'dept-er' }
+  ];
+
+  /* ================= 3. 用户 ================= */
+  const users = [
+    { id: 'user-admin', account: 'admin', password: 'admin123', name: '王运维', deptId: 'dept-eq', postId: 'post-it', role: '系统管理员', title: '信息主管', mobile: '13800000001', email: 'admin@ycairport.cn', idCard: '520300198601010011', status: '启用', entryDate: '2018-03-01' },
+    { id: 'user-gm', account: 'leader', password: 'leader123', name: '张建国', deptId: 'dept-root', postId: 'post-gm', role: '公司领导', title: '总经理', mobile: '13800000002', email: 'zhangjg@ycairport.cn', idCard: '520300197205050022', status: '启用', entryDate: '2015-06-01' },
+    { id: 'user-vgm', account: 'vgm', password: 'vgm123', name: '刘安全', deptId: 'dept-root', postId: 'post-vgm', role: '公司领导', title: '副总经理', mobile: '13800000003', email: 'liuaq@ycairport.cn', idCard: '520300197508080033', status: '启用', entryDate: '2016-02-01' },
+    { id: 'user-sm', account: 'aq', password: 'aq123', name: '李安民', deptId: 'dept-aq', postId: 'post-sm', role: '安质部领导', title: '安全总监', mobile: '13800000004', email: 'liam@ycairport.cn', idCard: '520300197811110044', status: '启用', entryDate: '2016-09-01' },
+    { id: 'user-insp', account: 'inspector', password: 'insp123', name: '赵监察', deptId: 'dept-aq', postId: 'post-insp', role: '安质部监察员', title: '监察员', mobile: '13800000005', email: 'zhaojc@ycairport.cn', idCard: '520300198503030055', status: '启用', entryDate: '2017-04-01' },
+    { id: 'user-insp2', account: 'inspector2', password: 'insp123', name: '钱监督', deptId: 'dept-aq', postId: 'post-insp', role: '安质部监察员', title: '监察员', mobile: '13800000006', email: 'qianjd@ycairport.cn', idCard: '520300198707070066', status: '启用', entryDate: '2019-01-01' },
+    { id: 'user-aqadmin', account: 'aqadmin', password: 'aq123', name: '孙整理', deptId: 'dept-aq', postId: 'post-aqadmin', role: '安质部监察员', title: '安全管理员', mobile: '13800000007', email: 'sunzl@ycairport.cn', idCard: '520300199009090077', status: '启用', entryDate: '2020-05-01' },
+    { id: 'user-dmgr', account: 'dmgr', password: 'dmgr123', name: '孙德明', deptId: 'dept-gs', postId: 'post-pax', role: '部门领导', title: '地面服务部经理', mobile: '13800000008', email: 'sundm@ycairport.cn', idCard: '520300198001010088', status: '启用', entryDate: '2016-07-01' },
+    { id: 'user-ocmgr', account: 'ocmgr', password: 'oc123', name: '陈志远', deptId: 'dept-oc', postId: 'post-oc', role: '部门领导', title: '运行指挥中心主任', mobile: '13800000009', email: 'chenzy@ycairport.cn', idCard: '520300198202020099', status: '启用', entryDate: '2016-03-01' },
+    { id: 'user-armgr', account: 'armgr', password: 'ar123', name: '马道面', deptId: 'dept-ar', postId: 'post-field', role: '部门领导', title: '飞行区管理部经理', mobile: '13800000010', email: 'madm@ycairport.cn', idCard: '520300198304040110', status: '启用', entryDate: '2017-06-01' },
+    { id: 'user-scmgr', account: 'scmgr', password: 'sc123', name: '卫国强', deptId: 'dept-sc', postId: 'post-sec', role: '部门领导', title: '安检护卫部经理', mobile: '13800000011', email: 'weigq@ycairport.cn', idCard: '520300198406060121', status: '启用', entryDate: '2017-08-01' },
+    { id: 'user-ds', account: 'dsafety', password: 'ds123', name: '周安全', deptId: 'dept-ar', postId: 'post-field', role: '部门安全员', title: '部门安全员', mobile: '13800000012', email: 'zhouaq@ycairport.cn', idCard: '520300198808080132', status: '启用', entryDate: '2018-10-01' },
+    { id: 'user-ds2', account: 'dsafety2', password: 'ds123', name: '郑防范', deptId: 'dept-gs', postId: 'post-pax', role: '部门安全员', title: '部门安全员', mobile: '13800000013', email: 'zhengff@ycairport.cn', idCard: '520300198910100143', status: '启用', entryDate: '2019-05-01' },
+    { id: 'user-staff', account: 'staff', password: 'staff123', name: '吴员工', deptId: 'dept-ar', postId: 'post-field', role: '员工', title: '场务巡视员', mobile: '13800000014', email: 'wuyg@ycairport.cn', idCard: '520300199512120154', status: '启用', entryDate: '2021-02-01' },
+    { id: 'u-oc1', account: 'oc01', password: '123456', name: '孔指挥', deptId: 'dept-oc', postId: 'post-oc', role: '员工', title: '运行指挥员', mobile: '13800000015', email: 'kongzh@ycairport.cn', idCard: '520300199101010165', status: '启用', entryDate: '2019-03-01' },
+    { id: 'u-oc2', account: 'oc02', password: '123456', name: '曹管制', deptId: 'dept-oc', postId: 'post-apron', role: '员工', title: '机坪管制员', mobile: '13800000016', email: 'caogz@ycairport.cn', idCard: '520300199203030176', status: '启用', entryDate: '2019-07-01' },
+    { id: 'u-ar1', account: 'ar01', password: '123456', name: '严道面', deptId: 'dept-ar', postId: 'post-field', role: '员工', title: '场务巡视员', mobile: '13800000017', email: 'yandm@ycairport.cn', idCard: '520300199305050187', status: '启用', entryDate: '2020-01-01' },
+    { id: 'u-ar2', account: 'ar02', password: '123456', name: '华驱鸟', deptId: 'dept-ar', postId: 'post-bird', role: '员工', title: '鸟害防治员', mobile: '13800000018', email: 'huaqn@ycairport.cn', idCard: '520300199407070198', status: '启用', entryDate: '2020-06-01' },
+    { id: 'u-gs1', account: 'gs01', password: '123456', name: '蒋值机', deptId: 'dept-gs', postId: 'post-checkin', role: '员工', title: '值机员', mobile: '13800000019', email: 'jiangzj@ycairport.cn', idCard: '520300199509090209', status: '启用', entryDate: '2020-09-01' },
+    { id: 'u-gs2', account: 'gs02', password: '123456', name: '沈配载', deptId: 'dept-gs', postId: 'post-load', role: '员工', title: '配载员', mobile: '13800000020', email: 'shenpz@ycairport.cn', idCard: '520300199611110210', status: '启用', entryDate: '2021-01-01' },
+    { id: 'u-gs3', account: 'gs03', password: '123456', name: '韩客运', deptId: 'dept-gs', postId: 'post-pax', role: '员工', title: '客运服务员', mobile: '13800000021', email: 'han ky@ycairport.cn'.replace(' ', ''), idCard: '520300199701010221', status: '启用', entryDate: '2021-05-01' },
+    { id: 'u-sc1', account: 'sc01', password: '123456', name: '杨安检', deptId: 'dept-sc', postId: 'post-sec', role: '员工', title: '安检员', mobile: '13800000022', email: 'yangaj@ycairport.cn', idCard: '520300199803030232', status: '启用', entryDate: '2021-07-01' },
+    { id: 'u-sc2', account: 'sc02', password: '123456', name: '朱护卫', deptId: 'dept-sc', postId: 'post-guard', role: '员工', title: '护卫员', mobile: '13800000023', email: 'zhuhw@ycairport.cn', idCard: '520300199905050243', status: '启用', entryDate: '2021-09-01' },
+    { id: 'u-eq1', account: 'eq01', password: '123456', name: '秦维修', deptId: 'dept-eq', postId: 'post-eq', role: '员工', title: '设备维护员', mobile: '13800000024', email: 'qinwx@ycairport.cn', idCard: '520300199207070254', status: '启用', entryDate: '2019-09-01' },
+    { id: 'u-er1', account: 'er01', password: '123456', name: '尤消防', deptId: 'dept-er', postId: 'post-fire', role: '员工', title: '消防员', mobile: '13800000025', email: 'youxf@ycairport.cn', idCard: '520300199309090265', status: '启用', entryDate: '2019-11-01' },
+    { id: 'u-er2', account: 'er02', password: '123456', name: '许急救', deptId: 'dept-er', postId: 'post-med', role: '员工', title: '急救员', mobile: '13800000026', email: 'xujj@ycairport.cn', idCard: '520300199411110276', status: '启用', entryDate: '2020-03-01' },
+    { id: 'u-ho1', account: 'ho01', password: '123456', name: '何行政', deptId: 'dept-ho', postId: 'post-gm', role: '部门领导', title: '综合管理部经理', mobile: '13800000027', email: 'hexz@ycairport.cn', idCard: '520300198501010287', status: '启用', entryDate: '2017-02-01' },
+    { id: 'u-fi1', account: 'fi01', password: '123456', name: '钱会计', deptId: 'dept-fi', postId: 'post-gm', role: '部门领导', title: '计划财务部经理', mobile: '13800000028', email: 'qiankj@ycairport.cn', idCard: '520300198603030298', status: '启用', entryDate: '2017-05-01' }
+  ];
+
+  /* ================= 4. 设施设备 ================= */
+  const facilities = [
+    { id: 'fac-rwy', name: '跑道 02/20', code: 'RWY', spec: '长2600m×宽45m', deptId: 'dept-ar', important: true, status: '正常' },
+    { id: 'fac-twy', name: '平行滑行道', code: 'TWY-A', spec: '长2600m×宽23m', deptId: 'dept-ar', important: true, status: '正常' },
+    { id: 'fac-apron', name: '站坪', code: 'APN', spec: '停机位 9 个（6C3B）', deptId: 'dept-oc', important: true, status: '正常' },
+    { id: 'fac-als', name: '进近灯光系统', code: 'ALS', spec: '简易进近灯光', deptId: 'dept-eq', important: true, status: '正常' },
+    { id: 'fac-papi', name: '精密进近坡度指示', code: 'PAPI', spec: '02/20 两端', deptId: 'dept-eq', important: false, status: '正常' },
+    { id: 'fac-ils', name: '仪表着陆系统', code: 'ILS', spec: '02 号 I 类', deptId: 'dept-eq', important: true, status: '正常' },
+    { id: 'fac-gse1', name: '飞机牵引车', code: 'GSE-T', spec: '3 台', deptId: 'dept-gs', important: false, status: '正常' },
+    { id: 'fac-gse2', name: '登机梯/客梯车', code: 'GSE-S', spec: '4 台', deptId: 'dept-gs', important: false, status: '1 台维保' },
+    { id: 'fac-gpu', name: '地面电源车', code: 'GPU', spec: '2 台', deptId: 'dept-gs', important: false, status: '正常' },
+    { id: 'fac-fft', name: '消防车辆', code: 'FFT', spec: '主力泡沫车 2 台', deptId: 'dept-er', important: true, status: '正常' },
+    { id: 'fac-awt', name: '除冰雪设备', code: 'AWT', spec: '吹雪车 1 台', deptId: 'dept-ar', important: false, status: '正常' },
+    { id: 'fac-xray', name: '安检 X 光机', code: 'XRAY', spec: '行检 4 台、货检 1 台', deptId: 'dept-sc', important: true, status: '正常' },
+    { id: 'fac-cctv', name: '机坪视频监控', code: 'CCTV', spec: '球机 32 路', deptId: 'dept-eq', important: false, status: '正常' },
+    { id: 'fac-fence', name: '围界及入侵报警', code: 'FENCE', spec: '全长 8.6km', deptId: 'dept-sc', important: true, status: '正常' }
+  ];
+  const importantFacilities = facilities.filter(f => f.important);
+  const importantPositions = posts.filter(p => p.important);
+
+  /* ================= 5. 危险源 ================= */
+  const hazards = [
+    hz({ id: 'hz-001', code: 'WXY-2026-001', source: '危险源辨识', deptId: 'dept-ar', respDeptId: 'dept-ar', foundDate: '2026-01-12', desc: '跑道道面出现裂缝、掉块，可能造成航空器轮胎损伤', category: '飞行安全', subCategory: '人员安全', dimension: '作业环境', L: 3, S: 4, posts: 'post-field', rootCause: '道面老化、雨水侵蚀，巡检频次不足', consequence: '航空器轮胎扎伤、中断起飞', expertEval: '纳入每日徒步/车辆巡检，雨后专项检查', manageLevel: '公司级', identifyWay: '历史事件分析', triggerCount: 2 }),
+    hz({ id: 'hz-002', code: 'WXY-2026-002', source: '自愿报告转危险源', deptId: 'dept-oc', respDeptId: 'dept-oc', foundDate: '2026-01-20', desc: '机坪车辆超速行驶、未按规定路线让行航空器', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', L: 4, S: 4, posts: 'post-apron', rootCause: '驾驶员规章意识薄弱、机坪监管不到位', consequence: '车辆与航空器刮碰', expertEval: '限速标识、GPS 限速、违章记分', manageLevel: '公司级', identifyWay: 'SCASS', triggerCount: 4 }),
+    hz({ id: 'hz-003', code: 'WXY-2026-003', source: '危险源辨识', deptId: 'dept-ar', respDeptId: 'dept-ar', foundDate: '2026-02-03', desc: '鸟类侵入跑道、集群活动导致鸟击航空器', category: '飞行安全', subCategory: '', dimension: '外部因素', L: 4, S: 3, posts: 'post-bird', rootCause: '周边食物链、栖息地吸引，季节迁徙', consequence: '鸟击致发动机/风挡损伤', expertEval: '生态治理、驱赶、飞行区割草清虫', manageLevel: '公司级', identifyWay: '历史事件分析', triggerCount: 3 }),
+    hz({ id: 'hz-004', code: 'WXY-2026-004', source: '事件调查转危险源', deptId: 'dept-gs', respDeptId: 'dept-gs', foundDate: '2026-02-15', desc: '行李/货物装卸未按规定码放、固定，高空掉落', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', L: 3, S: 3, posts: 'post-cargo', rootCause: '作业图快、培训不到位', consequence: '人员砸伤、行李损毁', expertEval: '规范码放、佩戴劳保、现场监督', manageLevel: '部门级', identifyWay: '岗位基本安全风险评价', triggerCount: 1 }),
+    hz({ id: 'hz-005', code: 'WXY-2026-005', source: '危险源辨识', deptId: 'dept-sc', respDeptId: 'dept-sc', foundDate: '2026-02-22', desc: '旅客/工作人员未经授权进入控制区，围界破损', category: '空防安全', subCategory: '人员安全', dimension: '作业环境', L: 2, S: 5, posts: 'post-guard', rootCause: '围界老化、门禁管控疏漏', consequence: '非法侵入、安保事件', expertEval: '围界巡查、门禁双人值守、入侵报警联动', manageLevel: '公司级', identifyWay: '失效树分析', triggerCount: 1 }),
+    hz({ id: 'hz-006', code: 'WXY-2026-006', source: '危险源辨识', deptId: 'dept-eq', respDeptId: 'dept-eq', foundDate: '2026-03-01', desc: '导航/助航灯光设备故障、供电中断', category: '飞行安全', subCategory: '', dimension: '信息系统运行管理', L: 2, S: 5, posts: 'post-eq', rootCause: '设备老化、UPS 容量不足、维护不及时', consequence: '航空器低能见度无法起降', expertEval: '双回路供电、定期检测、备件储备', manageLevel: '公司级', identifyWay: '失效树分析', triggerCount: 2 }),
+    hz({ id: 'hz-007', code: 'WXY-2026-007', source: '自愿报告转危险源', deptId: 'dept-gs', respDeptId: 'dept-gs', foundDate: '2026-03-09', desc: '值机配载错误，载重平衡计算偏差', category: '飞行安全', subCategory: '', dimension: '人为因素', L: 2, S: 5, posts: 'post-load', rootCause: '手工计算差错、复核流于形式', consequence: '航空器重心超限影响操纵', expertEval: '双人复核、配载系统校验', manageLevel: '公司级', identifyWay: '系统工程', triggerCount: 1 }),
+    hz({ id: 'hz-008', code: 'WXY-2026-008', source: '危险源辨识', deptId: 'dept-er', respDeptId: 'dept-er', foundDate: '2026-03-15', desc: '消防/急救应急响应超时，装备不到位', category: '地面运行安全', subCategory: '', dimension: '培训考核', L: 2, S: 4, posts: 'post-fire', rootCause: '演练不足、装备维护缺位', consequence: '事故扩大、人员伤亡', expertEval: '按月拉动演练、装备点检', manageLevel: '公司级', identifyWay: 'HAZOP', triggerCount: 1 }),
+    hz({ id: 'hz-009', code: 'WXY-2026-009', source: '危险源辨识', deptId: 'dept-oc', respDeptId: 'dept-oc', foundDate: '2026-03-20', desc: '低能见度/雷雨大风等复杂天气下运行标准把握不当', category: '飞行安全', subCategory: '', dimension: '外部因素', L: 3, S: 4, posts: 'post-oc', rootCause: '气象信息获取滞后、标准执行不坚决', consequence: '航空器偏出、复飞备降', expertEval: '气象联动、明确最低运行标准、果断中止', manageLevel: '公司级', identifyWay: '历史事件分析', triggerCount: 2 }),
+    hz({ id: 'hz-010', code: 'WXY-2026-010', source: '危险源辨识', deptId: 'dept-ar', respDeptId: 'dept-ar', foundDate: '2026-03-26', desc: '跑道侵入：人员车辆未经许可进入运行跑道', category: '飞行安全', subCategory: '人员安全', dimension: '人为因素', L: 2, S: 5, posts: 'post-field', rootCause: '通讯复诵不规范、道口管控不严', consequence: '与起降航空器相撞', expertEval: '跑道安全培训、道口值守、复诵确认', manageLevel: '公司级', identifyWay: 'SCASS', triggerCount: 1 }),
+    hz({ id: 'hz-011', code: 'WXY-2026-011', source: '危险源辨识', deptId: 'dept-eq', respDeptId: 'dept-eq', foundDate: '2026-04-02', desc: '信息系统遭网络攻击、数据泄露或勒索', category: '信息系统安全', subCategory: '', dimension: '信息系统运行管理', L: 2, S: 4, posts: 'post-it', rootCause: '弱口令、补丁滞后、内外网隔离不足', consequence: '运行中断、敏感信息泄露', expertEval: '等保整改、WAF、最小权限、离线备份', manageLevel: '公司级', identifyWay: 'SWIFT', triggerCount: 1 }),
+    hz({ id: 'hz-012', code: 'WXY-2026-012', source: '危险源辨识', deptId: 'dept-sc', respDeptId: 'dept-sc', foundDate: '2026-04-10', desc: '安检漏检、误判，违禁物品进入控制区', category: '空防安全', subCategory: '', dimension: '人为因素', L: 2, S: 5, posts: 'post-sec', rootCause: '图像识别能力不足、疲劳作业', consequence: '违禁品带上航空器', expertEval: '图像识别复训、岗位轮换、质控抽检', manageLevel: '公司级', identifyWay: '历史事件分析', triggerCount: 2 }),
+    hz({ id: 'hz-013', code: 'WXY-2026-013', source: '危险源辨识', deptId: 'dept-ar', respDeptId: 'dept-ar', foundDate: '2026-04-18', desc: '飞行区 FOD（外来物）未及时清除', category: '飞行安全', subCategory: '', dimension: '作业环境', L: 4, S: 3, posts: 'post-field', rootCause: '施工遗留、车辆掉物、清扫不及时', consequence: '轮胎损伤、发动机吸入', expertEval: 'FOD 步行巡查、施工管控、信息报告', manageLevel: '部门级', identifyWay: '岗位基本安全风险评价', triggerCount: 3 }),
+    hz({ id: 'hz-014', code: 'WXY-2026-014', source: '自愿报告转危险源', deptId: 'dept-gs', respDeptId: 'dept-gs', foundDate: '2026-04-25', desc: '旅客下机/廊桥对接过程滑倒、夹伤', category: '地面运行安全', subCategory: '人员安全', dimension: '作业环境', L: 3, S: 2, posts: 'post-pax', rootCause: '雨雪湿滑、廊桥对位不规范', consequence: '旅客人身伤害、投诉', expertEval: '防滑提示、规范对接、现场引导', manageLevel: '部门级', identifyWay: '访谈', triggerCount: 1 }),
+    hz({ id: 'hz-015', code: 'WXY-2026-015', source: '危险源辨识', deptId: 'dept-ar', respDeptId: 'dept-ar', foundDate: '2026-05-06', desc: '冬季道面结冰、积雪清除不彻底', category: '飞行安全', subCategory: '', dimension: '外部因素', L: 3, S: 4, posts: 'post-field', rootCause: '除冰雪预案不熟、设备不足', consequence: '航空器打滑、偏出', expertEval: '除冰雪演练、物资储备、协同联动', manageLevel: '公司级', identifyWay: '头脑风暴', triggerCount: 1 }),
+    hz({ id: 'hz-016', code: 'WXY-2026-016', source: '危险源辨识', deptId: 'dept-gs', respDeptId: 'dept-gs', foundDate: '2026-05-14', desc: '危险品（锂电池等）违规夹带运输', category: '地面运行安全', subCategory: '', dimension: '外部因素', L: 2, S: 4, posts: 'post-checkin', rootCause: '旅客瞒报、识别困难', consequence: '空中起火', expertEval: '告知提示、收运检查、应急处置卡', manageLevel: '公司级', identifyWay: 'HAZOP', triggerCount: 1 }),
+    hz({ id: 'hz-017', code: 'WXY-2026-017', source: '危险源辨识', deptId: 'dept-oc', respDeptId: 'dept-oc', foundDate: '2026-05-22', desc: '机坪夜间照明不足、标识不清', category: '地面运行安全', subCategory: '', dimension: '作业环境', L: 3, S: 3, posts: 'post-apron', rootCause: '灯具损坏、维护不及时', consequence: '人员车辆误判刮碰', expertEval: '照度检测、灯具更换、反光标识', manageLevel: '部门级', identifyWay: '访谈', triggerCount: 1 }),
+    hz({ id: 'hz-018', code: 'WXY-2026-018', source: '危险源辨识', deptId: 'dept-er', respDeptId: 'dept-er', foundDate: '2026-05-30', desc: '传染病疫情下人员聚集、防护不到位', category: '疫情防控', subCategory: '人员安全', dimension: '外部因素', L: 2, S: 4, posts: 'post-med', rootCause: '防控方案执行不严、物资不足', consequence: '疫情扩散、运行减员', expertEval: '分区管控、健康监测、物资储备', manageLevel: '公司级', identifyWay: 'SWIFT', triggerCount: 0 }),
+    hz({ id: 'hz-019', code: 'WXY-2026-019', source: '危险源辨识', deptId: 'dept-gs', respDeptId: 'dept-gs', foundDate: '2026-06-08', desc: '特种车辆（牵引车、电源车）带病作业', category: '地面运行安全', subCategory: '', dimension: '安全投入', L: 2, S: 3, posts: 'post-eq', rootCause: '维保投入不足、超期服役', consequence: '作业中故障引发刮碰', expertEval: '出车前检查、按期维保、更新计划', manageLevel: '部门级', identifyWay: '系统工程', triggerCount: 1 }),
+    hz({ id: 'hz-020', code: 'WXY-2026-020', source: '危险源辨识', deptId: 'dept-aq', respDeptId: 'dept-aq', foundDate: '2026-06-16', desc: '安全责任制不落实、岗位安全职责不清', category: '飞行安全', subCategory: '', dimension: '培训考核', L: 2, S: 3, posts: 'post-insp', rootCause: '职责梳理不到位、考核未挂钩', consequence: '管理真空、责任难追溯', expertEval: '逐级责任书、职责清单、考核挂钩', manageLevel: '公司级', identifyWay: '访谈', triggerCount: 0 }),
+    hz({ id: 'hz-021', code: 'WXY-2026-021', source: '危险源辨识', deptId: 'dept-ar', respDeptId: 'dept-ar', foundDate: '2026-07-02', desc: '不停航施工组织不当，施工人员机械侵入运行区', category: '飞行安全', subCategory: '人员安全', dimension: '人为因素', L: 2, S: 5, posts: 'post-field', rootCause: '施工方案交底不足、现场监护缺位', consequence: '跑道侵入、FOD', expertEval: '专项风险评估、全程监护、完工验收', manageLevel: '公司级', identifyWay: 'HAZOP', triggerCount: 1 }),
+    hz({ id: 'hz-022', code: 'WXY-2026-022', source: '危险源辨识', deptId: 'dept-sc', respDeptId: 'dept-sc', foundDate: '2026-07-12', desc: '控制区证件过期、冒用、转借', category: '空防安全', subCategory: '人员安全', dimension: '人为因素', L: 2, S: 4, posts: 'post-guard', rootCause: '证件有效期管控不严、查验不细', consequence: '无关人员进入控制区', expertEval: '证件到期预警、人证对照、记分管理', manageLevel: '部门级', identifyWay: '历史事件分析', triggerCount: 1 }),
+    hz({ id: 'hz-023', code: 'WXY-2026-023', source: '危险源辨识', deptId: 'dept-oc', respDeptId: 'dept-oc', foundDate: '2026-07-22', desc: '航班大面积延误下旅客情绪激动、现场秩序失控', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', L: 3, S: 3, posts: 'post-oc', rootCause: '信息告知不及时、保障资源不足', consequence: '群体性事件、冲突', expertEval: '延误预案、信息发布、增开窗口与安保', manageLevel: '公司级', identifyWay: '头脑风暴', triggerCount: 2 }),
+    hz({ id: 'hz-024', code: 'WXY-2026-024', source: '危险源辨识', deptId: 'dept-eq', respDeptId: 'dept-eq', foundDate: '2026-08-03', desc: '离港/安检信息系统宕机，业务无法办理', category: '信息系统安全', subCategory: '', dimension: '信息系统运行管理', L: 2, S: 4, posts: 'post-it', rootCause: '单点故障、应急预案缺失', consequence: '大面积航班延误', expertEval: '双机热备、手工备份流程、快速恢复', manageLevel: '公司级', identifyWay: '失效树分析', triggerCount: 1 })
+  ];
+
+  /* ================= 6. 隐患 ================= */
+  const hiddenDangers = [
+    { id: 'hd-001', code: 'YH-2026-001', foundDate: '2026-05-08', name: '跑道 02 端联络道道面局部网裂', category: '飞行安全', subCategory: '', dimension: '作业环境', level: '一般隐患', respDeptId: 'dept-ar', dueDate: '2026-06-08', linkedHazard: 'hz-001', rootCause: '道面超期使用', prevent: '加强巡检', emergency: '设置标志避让', mainHarm: '轮胎损伤', capa: '切槽灌缝修补', altMeasure: '', rectifier: 'user-ds', verifier: 'user-insp', status: '已关闭', closeDate: '2026-06-02', evidence: '修补前后照片、验收单', toHazard: true },
+    { id: 'hd-002', code: 'YH-2026-002', foundDate: '2026-06-11', name: '机坪部分车辆限速标志缺失', category: '地面运行安全', subCategory: '人员安全', dimension: '作业环境', level: '一般隐患', respDeptId: 'dept-oc', dueDate: '2026-07-11', linkedHazard: 'hz-002', rootCause: '标志更新不及时', prevent: '补齐标志', emergency: '人工提醒', mainHarm: '超速刮碰', capa: '增设限速及警示标志', altMeasure: '', rectifier: 'u-oc2', verifier: 'user-insp2', status: '已关闭', closeDate: '2026-07-02', evidence: '现场照片', toHazard: true },
+    { id: 'hd-003', code: 'YH-2026-003', foundDate: '2026-07-15', name: '围界 3 号区段防攀爬网破损', category: '空防安全', subCategory: '人员安全', dimension: '作业环境', level: '重大隐患', respDeptId: 'dept-sc', dueDate: '2026-08-15', linkedHazard: 'hz-005', rootCause: '外力损坏、锈蚀', prevent: '加密巡查', emergency: '临时值守', mainHarm: '非法侵入', capa: '更换修复防攀爬网并加固', altMeasure: '临时增设双人值守至修复', rectifier: 'u-sc2', verifier: 'user-insp', status: '整改中', closeDate: '', evidence: '破损照片（整改材料待补）', toHazard: false },
+    { id: 'hd-004', code: 'YH-2026-004', foundDate: '2026-07-20', name: '助航灯光备用电源（UPS）电池容量衰减', category: '飞行安全', subCategory: '', dimension: '安全投入', level: '一般隐患', respDeptId: 'dept-eq', dueDate: '2026-08-20', linkedHazard: 'hz-006', rootCause: '电池超期服役', prevent: '定期检测', emergency: '启用应急发电', mainHarm: '灯光中断', capa: '更换蓄电池组', altMeasure: '', rectifier: 'u-eq1', verifier: 'user-insp', status: '待复查', closeDate: '', evidence: '检测报告', toHazard: false },
+    { id: 'hd-005', code: 'YH-2026-005', foundDate: '2026-08-02', name: '货运仓库货物码放超高、通道占用', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', level: '一般隐患', respDeptId: 'dept-gs', dueDate: '2026-08-18', linkedHazard: 'hz-004', rootCause: '作业不规范', prevent: '现场整顿', emergency: '立即清理', mainHarm: '货物倒塌', capa: '规范限高码放、留出通道', altMeasure: '', rectifier: 'user-ds2', verifier: 'user-insp2', status: '整改中', closeDate: '', evidence: '', toHazard: false },
+    { id: 'hd-006', code: 'YH-2026-006', foundDate: '2026-08-10', name: '安检 X 光机图像识别质控记录不完整', category: '空防安全', subCategory: '', dimension: '管理型', level: '一般隐患', respDeptId: 'dept-sc', dueDate: '2026-09-10', linkedHazard: 'hz-012', rootCause: '质控台账缺失', prevent: '完善制度', emergency: '-', mainHarm: '漏检失控', capa: '补建质控台账并按月归档', altMeasure: '', rectifier: 'u-sc1', verifier: 'user-insp', status: '已关闭', closeDate: '2026-09-05', evidence: '质控台账', toHazard: true },
+    { id: 'hd-007', code: 'YH-2026-007', foundDate: '2026-08-18', name: '飞行区排水沟淤积、排水不畅', category: '飞行安全', subCategory: '', dimension: '作业环境', level: '一般隐患', respDeptId: 'dept-ar', dueDate: '2026-09-18', linkedHazard: 'hz-001', rootCause: '淤泥杂物未清', prevent: '汛前清淤', emergency: '强排', mainHarm: '道面积水', capa: '清理疏通排水沟', altMeasure: '', rectifier: 'u-ar1', verifier: 'user-ds', status: '已逾期', closeDate: '', evidence: '', toHazard: false },
+    { id: 'hd-008', code: 'YH-2026-008', foundDate: '2026-08-25', name: '个别人员控制区证件即将过期未及时续办', category: '空防安全', subCategory: '人员安全', dimension: '人为因素', level: '一般隐患', respDeptId: 'dept-sc', dueDate: '2026-09-25', linkedHazard: 'hz-022', rootCause: '提醒不到位', prevent: '到期预警', emergency: '暂停授权', mainHarm: '证件失控', capa: '统一续办并启用到期提醒', altMeasure: '', rectifier: 'u-sc2', verifier: 'user-insp2', status: '已关闭', closeDate: '2026-09-15', evidence: '新证清单', toHazard: true },
+    { id: 'hd-009', code: 'YH-2026-009', foundDate: '2026-09-01', name: '机坪 5 号机位高杆灯一盏不亮', category: '地面运行安全', subCategory: '', dimension: '作业环境', level: '一般隐患', respDeptId: 'dept-oc', dueDate: '2026-09-20', linkedHazard: 'hz-017', rootCause: '灯具损坏', prevent: '巡检', emergency: '临时照明', mainHarm: '夜间误判', capa: '更换灯具', altMeasure: '', rectifier: 'u-oc2', verifier: 'user-insp', status: '待复查', closeDate: '', evidence: '', toHazard: false },
+    { id: 'hd-010', code: 'YH-2026-010', foundDate: '2026-09-05', name: '信息机房消防气体灭火气瓶压力偏低', category: '信息系统安全', subCategory: '', dimension: '安全投入', level: '重大隐患', respDeptId: 'dept-eq', dueDate: '2026-09-30', linkedHazard: 'hz-011', rootCause: '气瓶缓慢泄漏', prevent: '定期试压', emergency: '增配灭火器', mainHarm: '机房火灾失控', capa: '充装/更换气瓶并试压', altMeasure: '', rectifier: 'u-eq1', verifier: 'user-insp', status: '整改中', closeDate: '', evidence: '压力检测照片', toHazard: false },
+    { id: 'hd-011', code: 'YH-2026-011', foundDate: '2026-09-08', name: '旅客廊桥对接防滑垫老化卷边', category: '地面运行安全', subCategory: '人员安全', dimension: '作业环境', level: '一般隐患', respDeptId: 'dept-gs', dueDate: '2026-09-28', linkedHazard: 'hz-014', rootCause: '老化未换', prevent: '点检', emergency: '铺临时垫', mainHarm: '旅客滑倒', capa: '更换防滑垫', altMeasure: '', rectifier: 'u-gs3', verifier: 'user-insp2', status: '整改中', closeDate: '', evidence: '', toHazard: false },
+    { id: 'hd-012', code: 'YH-2026-012', foundDate: '2026-09-10', name: '鸟害防治煤气炮驱鸟设备 1 台失效', category: '飞行安全', subCategory: '', dimension: '安全投入', level: '一般隐患', respDeptId: 'dept-ar', dueDate: '2026-09-25', linkedHazard: 'hz-003', rootCause: '设备故障', prevent: '维护', emergency: '人工驱赶', mainHarm: '鸟击', capa: '维修更换驱鸟设备', altMeasure: '', rectifier: 'u-ar2', verifier: 'user-ds', status: '已关闭', closeDate: '2026-09-20', evidence: '维修记录', toHazard: true },
+    { id: 'hd-013', code: 'YH-2026-013', foundDate: '2026-09-14', name: '消防泡沫液临近有效期、储量不足', category: '地面运行安全', subCategory: '', dimension: '安全投入', level: '一般隐患', respDeptId: 'dept-er', dueDate: '2026-10-14', linkedHazard: 'hz-008', rootCause: '未按期补充', prevent: '台账管理', emergency: '调配', mainHarm: '灭火能力不足', capa: '补充更换泡沫液', altMeasure: '', rectifier: 'u-er1', verifier: 'user-insp', status: '整改中', closeDate: '', evidence: '', toHazard: false },
+    { id: 'hd-014', code: 'YH-2026-014', foundDate: '2026-09-18', name: '跑道端 FOD 收集容器设置不足', category: '飞行安全', subCategory: '', dimension: '作业环境', level: '一般隐患', respDeptId: 'dept-ar', dueDate: '2026-10-18', linkedHazard: 'hz-013', rootCause: '布点不足', prevent: '增设', emergency: '人工收集', mainHarm: 'FOD 入侵', capa: '增设 FOD 收集点', altMeasure: '', rectifier: 'user-ds', verifier: 'user-insp', status: '整改中', closeDate: '', evidence: '', toHazard: false }
+  ];
+
+  /* ================= 7. 自愿报告 ================= */
+  const voluntaryReports = [
+    { id: 'vr-001', code: 'ZY-2026-001', airport: '云川国际机场', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-05-12 08:20', reportDate: '2026-05-12', area: '跑道', location: '02 号跑道中段', title: '跑道中线灯一处不亮', desc: '巡检发现 02 跑道中线灯一盏不亮', category: '飞行安全', subCategory: '', dimension: '信息系统运行管理', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '设施' },
+    { id: 'vr-002', code: 'ZY-2026-002', airport: '云川国际机场', deptId: 'dept-oc', respDeptId: 'dept-oc', occurTime: '2026-05-20 14:05', reportDate: '2026-05-20', area: '机坪', location: '3 号机位', title: '机坪有行李拖车未放轮挡溜车', desc: '拖车未放轮挡发生轻微溜动', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '车辆' },
+    { id: 'vr-003', code: 'ZY-2026-003', airport: '云川国际机场', deptId: 'dept-gs', respDeptId: 'dept-gs', occurTime: '2026-06-02 10:30', reportDate: '2026-06-02', area: '航站楼', location: '登机口 2', title: '登机口地面有水未设提示', desc: '旅客险些滑倒', category: '地面运行安全', subCategory: '人员安全', dimension: '作业环境', source: '匿名', anonymous: true, adopted: '是', status: '已归档', stage: 3, involve: '人员' },
+    { id: 'vr-004', code: 'ZY-2026-004', airport: '云川国际机场', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-06-15 07:40', reportDate: '2026-06-15', area: '飞行区', location: '围界内侧草地', title: '发现野兔活动痕迹', desc: '清晨发现野兔，吸引猛禽', category: '飞行安全', subCategory: '', dimension: '外部因素', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '无' },
+    { id: 'vr-005', code: 'ZY-2026-005', airport: '云川国际机场', deptId: 'dept-gs', respDeptId: 'dept-gs', occurTime: '2026-06-25 16:50', reportDate: '2026-06-25', area: '机坪', location: '货舱', title: '装卸时卡板卡扣未扣紧', desc: '存在货物滑落风险', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', source: '本人填报', anonymous: false, adopted: '待判定', status: '审核中', stage: 1, involve: '无' },
+    { id: 'vr-006', code: 'ZY-2026-006', airport: '云川国际机场', deptId: 'dept-sc', respDeptId: 'dept-sc', occurTime: '2026-07-05 09:15', reportDate: '2026-07-05', area: '航站楼', location: '安检通道', title: '安检通道隔离带护栏松动', desc: '护栏晃动需固定', category: '空防安全', subCategory: '', dimension: '作业环境', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '设施' },
+    { id: 'vr-007', code: 'ZY-2026-007', airport: '云川国际机场', deptId: 'dept-oc', respDeptId: 'dept-oc', occurTime: '2026-07-15 11:20', reportDate: '2026-07-15', area: '机坪', location: '机坪主干道', title: '有社会车辆疑似超速', desc: '车辆经过机位未减速', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', source: '匿名', anonymous: true, adopted: '是', status: '已归档', stage: 3, involve: '车辆' },
+    { id: 'vr-008', code: 'ZY-2026-008', airport: '云川国际机场', deptId: 'dept-eq', respDeptId: 'dept-eq', occurTime: '2026-07-22 13:00', reportDate: '2026-07-22', area: '机房', location: '主机房', title: '机房温湿度告警阈值设置不合理', desc: '夜间高温未及时告警', category: '信息系统安全', subCategory: '', dimension: '信息系统运行管理', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '设施' },
+    { id: 'vr-009', code: 'ZY-2026-009', airport: '云川国际机场', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-08-01 06:55', reportDate: '2026-08-01', area: '跑道', location: '20 号跑道端', title: '跑道端有塑料薄膜 FOD', desc: '已清除，建议查来源', category: '飞行安全', subCategory: '', dimension: '作业环境', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '无' },
+    { id: 'vr-010', code: 'ZY-2026-010', airport: '云川国际机场', deptId: 'dept-gs', respDeptId: 'dept-gs', occurTime: '2026-08-09 15:30', reportDate: '2026-08-09', area: '航站楼', location: '行李提取', title: '行李转盘边缘护条脱落', desc: '可能刮伤旅客', category: '地面运行安全', subCategory: '人员安全', dimension: '作业环境', source: '本人填报', anonymous: false, adopted: '待判定', status: '审核中', stage: 1, involve: '设施' },
+    { id: 'vr-011', code: 'ZY-2026-011', airport: '云川国际机场', deptId: 'dept-er', respDeptId: 'dept-er', occurTime: '2026-08-16 12:10', reportDate: '2026-08-16', area: '急救站', location: '急救站', title: '急救药品台账与实物有出入', desc: '两种药品账实不符', category: '地面运行安全', subCategory: '', dimension: '管理型', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '无' },
+    { id: 'vr-012', code: 'ZY-2026-012', airport: '云川国际机场', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-08-22 17:25', reportDate: '2026-08-22', area: '飞行区', location: '排水沟', title: '排水沟盖板一处断裂', desc: '盖板断裂需更换', category: '飞行安全', subCategory: '', dimension: '作业环境', source: '匿名', anonymous: true, adopted: '是', status: '已归档', stage: 3, involve: '设施' },
+    { id: 'vr-013', code: 'ZY-2026-013', airport: '云川国际机场', deptId: 'dept-gs', respDeptId: 'dept-gs', occurTime: '2026-08-28 09:45', reportDate: '2026-08-28', area: '机坪', location: '客梯车', title: '客梯车轮挡橡胶老化', desc: '轮挡防滑效果下降', category: '地面运行安全', subCategory: '', dimension: '安全投入', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '车辆' },
+    { id: 'vr-014', code: 'ZY-2026-014', airport: '云川国际机场', deptId: 'dept-sc', respDeptId: 'dept-sc', occurTime: '2026-09-03 14:20', reportDate: '2026-09-03', area: '道口', location: '3 号道口', title: '道口读卡器反应迟钝', desc: '读卡偶有失败', category: '空防安全', subCategory: '', dimension: '信息系统运行管理', source: '本人填报', anonymous: false, adopted: '待判定', status: '部门处理', stage: 2, involve: '设施' },
+    { id: 'vr-015', code: 'ZY-2026-015', airport: '云川国际机场', deptId: 'dept-oc', respDeptId: 'dept-oc', occurTime: '2026-09-10 19:35', reportDate: '2026-09-10', area: '机坪', location: '机坪', title: '夜间作业人员反光背心穿着不规范', desc: '个别人反光背心未扣', category: '地面运行安全', subCategory: '人员安全', dimension: '人为因素', source: '匿名', anonymous: true, adopted: '是', status: '已归档', stage: 3, involve: '人员' },
+    { id: 'vr-016', code: 'ZY-2026-016', airport: '云川国际机场', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-09-16 07:10', reportDate: '2026-09-16', area: '滑行道', location: 'A 滑', title: '滑行道道肩有少量砂石', desc: '已清扫，建议加强', category: '飞行安全', subCategory: '', dimension: '作业环境', source: '本人填报', anonymous: false, adopted: '是', status: '已归档', stage: 3, involve: '无' }
+  ];
+
+  /* ================= 8. 强制报告 ================= */
+  const mandatoryReports = [
+    { id: 'mr-001', code: 'QZ-2026-001', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-05-18 08:05', reportDate: '2026-05-18', area: '跑道', stagePhase: '起飞', title: '航空器起飞阶段疑似鸟击', desc: '机组反映起飞后听到异响', urgent: '否', toAuthority: '否', eventLevel: '一般事件', eventType: '航空不安全事件', initialCause: '疑似鸟击', involve: '航空器', status: '已归档', flowStage: 3 },
+    { id: 'mr-002', code: 'QZ-2026-002', deptId: 'dept-oc', respDeptId: 'dept-oc', occurTime: '2026-06-08 12:40', reportDate: '2026-06-08', area: '机坪', stagePhase: '地面保障', title: '牵引车与客梯车轻微刮碰', desc: '设备轻微损伤，无人伤', urgent: '否', toAuthority: '否', eventLevel: '一般事件', eventType: '运行不正常事件', initialCause: '观察不周', involve: '车辆', status: '已归档', flowStage: 3 },
+    { id: 'mr-003', code: 'QZ-2026-003', deptId: 'dept-gs', respDeptId: 'dept-gs', occurTime: '2026-06-20 10:15', reportDate: '2026-06-20', area: '航站楼', stagePhase: '值机', title: '行李分拣系统短时故障', desc: '故障 25 分钟，人工分拣', urgent: '否', toAuthority: '否', eventLevel: '一般事件', eventType: '运行不正常事件', initialCause: '传感器故障', involve: '设施', status: '已归档', flowStage: 3 },
+    { id: 'mr-004', code: 'QZ-2026-004', deptId: 'dept-sc', respDeptId: 'dept-sc', occurTime: '2026-07-09 16:30', reportDate: '2026-07-09', area: '安检', stagePhase: '安检', title: '旅客夹带超量锂电池', desc: '查获超规锂电池，已处置', urgent: '否', toAuthority: '否', eventLevel: '一般事件', eventType: '航空不安全事件', initialCause: '旅客瞒报', involve: '人员', status: '已归档', flowStage: 3 },
+    { id: 'mr-005', code: 'QZ-2026-005', deptId: 'dept-eq', respDeptId: 'dept-eq', occurTime: '2026-07-26 21:05', reportDate: '2026-07-26', area: '机房', stagePhase: '运行', title: '离港系统数据库连接超时', desc: '中断约 12 分钟后恢复', urgent: '是', toAuthority: '否', eventLevel: '一般事件', eventType: '运行不正常事件', initialCause: '连接池耗尽', involve: '设施', status: '部门处理', flowStage: 2 },
+    { id: 'mr-006', code: 'QZ-2026-006', deptId: 'dept-ar', respDeptId: 'dept-ar', occurTime: '2026-08-12 06:30', reportDate: '2026-08-12', area: '跑道', stagePhase: '起降', title: '跑道摩擦系数低于标准', desc: '雨后摩擦系数不达标', urgent: '是', toAuthority: '是', eventLevel: '严重征候', eventType: '航空不安全事件', initialCause: '道面湿滑', involve: '设施', status: '审核中', flowStage: 1 },
+    { id: 'mr-007', code: 'QZ-2026-007', deptId: 'dept-gs', respDeptId: 'dept-gs', occurTime: '2026-08-29 13:50', reportDate: '2026-08-29', area: '机坪', stagePhase: '装卸', title: '货物装卸人员轻微扭伤', desc: '作业中脚踝扭伤', urgent: '否', toAuthority: '否', eventLevel: '一般事件', eventType: '运输不正常事件', initialCause: '作业姿势不当', involve: '人员', status: '已归档', flowStage: 3 },
+    { id: 'mr-008', code: 'QZ-2026-008', deptId: 'dept-er', respDeptId: 'dept-er', occurTime: '2026-09-12 11:00', reportDate: '2026-09-12', area: '航站楼', stagePhase: '候机', title: '候机旅客突发疾病', desc: '急救处置后送医', urgent: '是', toAuthority: '否', eventLevel: '一般事件', eventType: '服务不正常事件', initialCause: '旅客自身疾病', involve: '人员', status: '已归档', flowStage: 3 }
+  ];
+
+  /* ================= 9. 安全通告 ================= */
+  const notices = [
+    { id: 'nt-01', type: '通知公告', title: '关于开展 2026 年“安全生产月”活动的通知', deptId: 'dept-aq', date: '2026-05-30', creator: '李安民', informTo: '全体人员', status: '已发布', carousel: false },
+    { id: 'nt-02', type: '安全提示', title: '夏季雷雨季节运行安全风险提示', deptId: 'dept-aq', date: '2026-06-05', creator: '赵监察', informTo: '全体人员', status: '已发布', carousel: true },
+    { id: 'nt-03', type: '安全文化', title: '公司表彰 2026 年上半年安全标兵', deptId: 'dept-ho', date: '2026-07-02', creator: '何行政', informTo: '全体人员', status: '已发布', carousel: true },
+    { id: 'nt-04', type: '通知公告', title: '关于组织下半年应急演练的通知', deptId: 'dept-er', date: '2026-07-20', creator: '雷急救', informTo: '各部门', status: '已发布', carousel: false },
+    { id: 'nt-05', type: '安全提示', title: '机坪运行违章典型问题通报', deptId: 'dept-aq', date: '2026-08-15', creator: '李安民', informTo: '机坪作业人员', status: '已发布', carousel: false },
+    { id: 'nt-06', type: '通知公告', title: '国庆中秋假期保障安全工作部署', deptId: 'dept-oc', date: '2026-09-20', creator: '陈志远', informTo: '全体人员', status: '已发布', carousel: true }
+  ];
+
+  /* ================= 10. 待办 ================= */
+  const todos = [
+    { id: 'td-01', title: '审核自愿报告 ZY-2026-005', category: '报告审核', type: 'voluntary', assigneeId: 'user-insp', deptId: 'dept-aq', dueDate: '2026-09-26', route: 'assurance/voluntary', status: '待办', source: '自愿报告' },
+    { id: 'td-02', title: '审核自愿报告 ZY-2026-010', category: '报告审核', type: 'voluntary', assigneeId: 'user-insp', deptId: 'dept-aq', dueDate: '2026-09-27', route: 'assurance/voluntary', status: '待办', source: '自愿报告' },
+    { id: 'td-03', title: '处理道口读卡器问题 ZY-2026-014', category: '部门处理', type: 'handle', assigneeId: 'user-ds', deptId: 'dept-sc', dueDate: '2026-09-25', route: 'assurance/voluntary', status: '待办', source: '自愿报告' },
+    { id: 'td-04', title: '审核强制报告 QZ-2026-006', category: '报告审核', type: 'mandatory', assigneeId: 'user-sm', deptId: 'dept-aq', dueDate: '2026-09-15', route: 'assurance/mandatory', status: '待办', source: '强制报告' },
+    { id: 'td-05', title: '完成离港系统故障纠正预防 QZ-2026-005', category: '部门处理', type: 'handle', assigneeId: 'user-admin', deptId: 'dept-eq', dueDate: '2026-09-20', route: 'assurance/mandatory', status: '待办', source: '强制报告' },
+    { id: 'td-06', title: '隐患 YH-2026-003 整改（围界破损）', category: '隐患整改', type: 'hazard', assigneeId: 'u-sc2', deptId: 'dept-sc', dueDate: '2026-08-15', route: 'risk/hiddendanger', status: '待办', source: '隐患' },
+    { id: 'td-07', title: '隐患 YH-2026-007 整改（排水沟淤积）', category: '隐患整改', type: 'hazard', assigneeId: 'u-ar1', deptId: 'dept-ar', dueDate: '2026-09-18', route: 'risk/hiddendanger', status: '待办', source: '隐患' },
+    { id: 'td-08', title: '隐患 YH-2026-010 整改（机房灭火气瓶）', category: '隐患整改', type: 'hazard', assigneeId: 'u-eq1', deptId: 'dept-eq', dueDate: '2026-09-30', route: 'risk/hiddendanger', status: '待办', source: '隐患' },
+    { id: 'td-09', title: '参加“跑道安全”在线培训', category: '我的培训', type: 'training', assigneeId: 'user-staff', deptId: 'dept-ar', dueDate: '2026-10-10', route: 'promotion/training', status: '待办', source: '培训计划' },
+    { id: 'td-10', title: '参加危险品复训', category: '我的培训', type: 'training', assigneeId: 'user-ds', deptId: 'dept-ar', dueDate: '2026-10-15', route: 'promotion/training', status: '待办', source: '培训计划' },
+    { id: 'td-11', title: '准入考试（控制区）待考', category: '在线考试', type: 'exam', assigneeId: 'user-staff', deptId: 'dept-ar', dueDate: '2026-10-05', route: 'promotion/exam', status: '待办', source: '考试计划' },
+    { id: 'td-12', title: '落实安委会三季度安全措施', category: '事项督办', type: 'supervision', assigneeId: 'user-ds', deptId: 'dept-ar', dueDate: '2026-09-30', route: 'promotion/supervision', status: '待办', source: '督办' },
+    { id: 'td-d1', title: '审核自愿报告 ZY-2026-001', category: '报告审核', type: 'voluntary', assigneeId: 'user-insp', deptId: 'dept-aq', dueDate: '2026-05-15', route: 'assurance/voluntary', status: '已完成', source: '自愿报告', finishTime: '2026-05-13 10:20' },
+    { id: 'td-d2', title: '隐患 YH-2026-001 整改验证', category: '隐患整改', type: 'hazard', assigneeId: 'user-ds', deptId: 'dept-ar', dueDate: '2026-06-08', route: 'risk/hiddendanger', status: '已完成', source: '隐患', finishTime: '2026-06-02 16:00' },
+    { id: 'td-d3', title: '完成消防安全培训', category: '我的培训', type: 'training', assigneeId: 'u-er1', deptId: 'dept-er', dueDate: '2026-08-22', route: 'promotion/training', status: '已完成', source: '培训计划', finishTime: '2026-08-20 11:30' },
+    { id: 'td-d4', title: '安检图像识别考试', category: '在线考试', type: 'exam', assigneeId: 'u-sc1', deptId: 'dept-sc', dueDate: '2026-09-08', route: 'promotion/exam', status: '已完成', source: '考试计划', finishTime: '2026-09-08 10:15' }
+  ];
+
+  /* ================= 11. 培训 / 考试（少量，供工作台与首页） ================= */
+  const trainings = [
+    { id: 'tr-01', code: 'PX-2026-01', name: '跑道安全专项培训', courseware: 'cw-01', hours: 120, way: '内训', instructor: '李安民', needExam: true, planDate: '2026-09-25', status: '进行中', users: ['user-staff', 'user-ds'] },
+    { id: 'tr-02', code: 'PX-2026-02', name: '危险品运输复训', courseware: 'cw-03', hours: 90, way: '内训', instructor: '赵监察', needExam: true, planDate: '2026-10-12', status: '未开始', users: ['user-ds'] },
+    { id: 'tr-03', code: 'PX-2026-03', name: '消防安全与应急处置', courseware: 'cw-05', hours: 150, way: '内训', instructor: '雷急救', needExam: false, planDate: '2026-08-20', status: '已完成', users: ['u-er1', 'u-er2'] },
+    { id: 'tr-04', code: 'PX-2026-04', name: '安检图像识别复训', courseware: 'cw-06', hours: 120, way: '内训', instructor: '卫国强', needExam: true, planDate: '2026-09-05', status: '已完成', users: ['u-sc1'] }
+  ];
+  const examTasks = [
+    { id: 'et-01', code: 'KS-2026-01', name: '控制区准入考试', planDate: '2026-10-05', duration: 60, paperId: 'paper-01', status: '待考', users: ['user-staff'] },
+    { id: 'et-02', code: 'KS-2026-02', name: '危险品复训考试', planDate: '2026-10-15', duration: 45, paperId: 'paper-02', status: '待考', users: ['user-ds'] },
+    { id: 'et-03', code: 'KS-2026-03', name: '安检图像识别考试', planDate: '2026-09-08', duration: 60, paperId: 'paper-03', status: '已完成', users: ['u-sc1'] }
+  ];
+
+  /* ================= 12. 机场运行日报（A-CDM 模拟数据） ================= */
+  const dailyOps = [
+    { id: 'do-01', date: '2026-09-22', flights: 24, pax: 2610, issue: 1, closed: 1 },
+    { id: 'do-02', date: '2026-09-23', flights: 26, pax: 2845, issue: 2, closed: 2 },
+    { id: 'do-03', date: '2026-09-24', flights: 25, pax: 2730, issue: 0, closed: 0 },
+    { id: 'do-04', date: '2026-09-25', flights: 28, pax: 3120, issue: 3, closed: 2 },
+    { id: 'do-05', date: '2026-09-26', flights: 27, pax: 2980, issue: 1, closed: 1 },
+    { id: 'do-06', date: '2026-09-27', flights: 23, pax: 2460, issue: 2, closed: 1 },
+    { id: 'do-07', date: '2026-09-28', flights: 25, pax: 2705, issue: 1, closed: 0 }
+  ];
+
+  /* ================= 13. 字典 ================= */
+  const dictionaries = [
+    { id: 'dict-1', name: '安全类别', code: 'safety_category', value: '飞行安全;地面运行安全;空防安全;信息系统安全;疫情防控' },
+    { id: 'dict-2', name: '管理维度', code: 'dimension', value: '人为因素;作业环境;信息系统运行管理;培训考核;外部因素;安全投入;其他' },
+    { id: 'dict-3', name: '指标类型', code: 'indicator_type', value: '过程型;结果型;管理型' },
+    { id: 'dict-4', name: '部门类型', code: 'dept_type', value: '职能部门;一线部门;安全管理部门' },
+    { id: 'dict-5', name: '检查频次', code: 'check_freq', value: '每日;每周;每月;每季;半年;每年;无固定期' },
+    { id: 'dict-6', name: '隐患等级', code: 'hazard_level', value: '一般隐患;重大隐患' }
+  ];
+
+  /* ================= 注册种子 ================= */
+  S.registerSeed('departments', departments);
+  S.registerSeed('posts', posts);
+  S.registerSeed('users', users);
+  S.registerSeed('facilities', facilities);
+  S.registerSeed('importantFacilities', importantFacilities);
+  S.registerSeed('importantPositions', importantPositions);
+  S.registerSeed('hazards', hazards);
+  S.registerSeed('hiddenDangers', hiddenDangers);
+  S.registerSeed('voluntaryReports', voluntaryReports);
+  S.registerSeed('mandatoryReports', mandatoryReports);
+  S.registerSeed('notices', notices);
+  S.registerSeed('todos', todos);
+  S.registerSeed('trainings', trainings);
+  S.registerSeed('examTasks', examTasks);
+  S.registerSeed('dictionaries', dictionaries);
+  S.registerSeed('dailyOps', dailyOps);
+  S.registerSeed('loginLogs', []);
+})();
+
+
+/* ===== modules/dashboard.js ===== */
+/* =====================================================================
+   modules/dashboard.js — 首页（D17）：公司级 / 部门级可视化看板
+   数据均由 store 现算；外部接口（A-CDM）使用预置模拟数据并标注。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS, S = SMS.store, U = SMS.util, ui = SMS.ui;
+  const el = U.el;
+  const curMonth = U.today().slice(0, 7);
+  const yesterday = U.fmtDate(U.addDays(new Date(), -1));
+
+  const deptName = id => { const d = S.get('departments', id); return d ? d.name : '—'; };
+
+  /* 数据范围切片 */
+  function scope(rows, deptField, isCompany) {
+    if (isCompany) return rows;
+    const d = SMS.auth.scopeDept();
+    if (d == null) return rows;
+    return rows.filter(r => r[deptField] === d || r.respDeptId === d);
+  }
+
+  function build(isCompany) {
+    const root = el('div');
+    const after = [];
+
+    const hazards = scope(S.all('hazards'), 'deptId', isCompany);
+    const hds = scope(S.all('hiddenDangers'), 'respDeptId', isCompany);
+    const vrs = scope(S.all('voluntaryReports'), 'deptId', isCompany);
+    const mrs = scope(S.all('mandatoryReports'), 'deptId', isCompany);
+
+    /* ---------- 顶部数据卡 ---------- */
+    const existHD = hds.filter(h => h.status !== '已关闭');
+    const hdNewMonth = hds.filter(h => h.foundDate.slice(0, 7) === curMonth);
+    const hzNewMonth = hazards.filter(h => h.foundDate.slice(0, 7) === curMonth);
+    const vrYear = vrs.filter(r => r.reportDate.slice(0, 4) === U.today().slice(0, 4));
+    const vrYesterday = vrs.filter(r => r.reportDate === yesterday);
+    const opsMonth = S.all('dailyOps').filter(d => d.date.slice(0, 7) === curMonth);
+    const flightsMonth = U.sum(opsMonth, d => d.flights);
+    const paxMonth = U.sum(opsMonth, d => d.pax);
+
+    const statRow = el('div', { class: 'grid g4' }, [
+      ui.statCard({ icon: 'alert', tone: 'var(--danger)', toneBg: 'var(--danger-soft)', value: existHD.length, label: '现存隐患', sub: '本月新增 ' + hdNewMonth.length + ' 项', dir: hdNewMonth.length ? 'up' : '' }),
+      ui.statCard({ icon: 'shield', tone: 'var(--brand)', toneBg: 'var(--brand-soft)', value: hazards.length, label: '现存危险源', sub: '本月新增 ' + hzNewMonth.length + ' 项', dir: hzNewMonth.length ? 'up' : '' }),
+      ui.statCard({ icon: 'send', tone: 'var(--teal)', toneBg: 'var(--teal-soft)', value: vrYear.length, label: '当年自愿报告', sub: '昨日新增 ' + vrYesterday.length + ' 项' }),
+      ui.statCard({ icon: 'plane', tone: 'var(--accent)', toneBg: 'var(--accent-soft)', value: flightsMonth, label: '本月航班架次', sub: '吞吐量 ' + U.fmtNum(paxMonth) + ' 人次' })
+    ]);
+    root.appendChild(statRow);
+
+    /* ---------- 关键 KPI ---------- */
+    const adopted = vrs.filter(r => r.adopted === '是');
+    const adoptRate = U.pct(adopted.length, vrs.length);
+    const closedHD = hds.filter(h => h.status === '已关闭');
+    const closeRate = U.pct(closedHD.length, hds.length);
+
+    const inspTasks = scope(S.all('inspectionTasks'), 'deptId', isCompany);
+    const inspDone = inspTasks.filter(t => t.status === '已完成');
+    const inspRate = inspTasks.length ? U.pct(inspDone.length, inspTasks.length) : null;
+
+    const capa = scope(S.all('correctiveActions'), 'respDeptId', isCompany);
+    const capaDone = capa.filter(c => c.status === '已验证');
+    const capaRate = capa.length ? U.pct(capaDone.length, capa.length) : null;
+
+    function kpiCard(label, value, tone) {
+      return el('div', { class: 'card' }, [
+        el('div', { class: 'card-b', style: { padding: '13px 16px' } }, [
+          el('div', { class: 'small muted', text: label }),
+          el('div', { style: { fontSize: '22px', fontWeight: '700', color: tone || 'var(--brand-dark)', margin: '4px 0 7px' }, text: value == null ? '—' : value + '%' }),
+          ui.progress(value == null ? 0 : value, value >= 90 ? 'ok' : value >= 70 ? 'warn' : 'danger')
+        ])
+      ]);
+    }
+    const kpiRow = el('div', { class: 'grid g4 mt' }, [
+      kpiCard('自愿报告采纳率', adoptRate, 'var(--teal)'),
+      kpiCard('检查任务完成率', inspRate, 'var(--brand)'),
+      kpiCard('隐患整改关闭率', closeRate, 'var(--accent)'),
+      kpiCard('跟踪验证闭环率', capaRate, 'var(--info)')
+    ]);
+    root.appendChild(kpiRow);
+
+    /* ---------- 图表行 1 ---------- */
+    const chartRow1 = el('div', { class: 'grid g2 mt' });
+    // 自愿报告：报告/采纳（按月）
+    const c1 = chartCard('自愿报告采纳情况（按月）', 'chart-vr');
+    chartRow1.appendChild(c1.card);
+    after.push(() => {
+      const months = ['05', '06', '07', '08', '09'];
+      const rep = months.map(m => vrs.filter(r => r.reportDate.slice(5, 7) === m).length);
+      const adp = months.map(m => vrs.filter(r => r.reportDate.slice(5, 7) === m && r.adopted === '是').length);
+      ui.chart(c1.body, ui.baseOption({
+        legend: { top: 4, data: ['报告数', '采纳数'] },
+        xAxis: { type: 'category', data: months.map(m => m + '月') },
+        yAxis: { type: 'value', minInterval: 1 },
+        series: [
+          { name: '报告数', type: 'bar', data: rep, itemStyle: { color: '#1F4E79' }, barMaxWidth: 26 },
+          { name: '采纳数', type: 'bar', data: adp, itemStyle: { color: '#2E6B5E' }, barMaxWidth: 26 }
+        ]
+      }));
+    });
+    // 强制报告：紧急/非紧急
+    const c2 = chartCard('强制报告数量（紧急/非紧急）', 'chart-mr');
+    chartRow1.appendChild(c2.card);
+    after.push(() => {
+      const urgent = mrs.filter(r => r.urgent === '是').length;
+      const normal = mrs.filter(r => r.urgent === '否').length;
+      ui.chart(c2.body, ui.baseOption({
+        tooltip: { trigger: 'item' }, legend: { top: 4 },
+        series: [{
+          type: 'pie', radius: ['42%', '66%'], center: ['50%', '56%'],
+          data: [{ name: '紧急事件', value: urgent, itemStyle: { color: '#C0392B' } }, { name: '非紧急事件', value: normal, itemStyle: { color: '#2E75B6' } }],
+          label: { formatter: '{b}: {c}' }
+        }]
+      }));
+    });
+    root.appendChild(chartRow1);
+
+    /* ---------- 图表行 2 ---------- */
+    const chartRow2 = el('div', { class: 'grid g2 mt' });
+    // 危险源等级分布
+    const c3 = chartCard('危险源识别（风险等级分布）', 'chart-hz');
+    chartRow2.appendChild(c3.card);
+    after.push(() => {
+      const levels = ['可忽略', '低度', '中度', '高度', '不可接受'];
+      const data = levels.map(l => ({ name: l, value: hazards.filter(h => h.level === l).length, itemStyle: { color: ui.LEVEL_COLORS[l] } }));
+      ui.chart(c3.body, ui.baseOption({
+        tooltip: { trigger: 'item' }, legend: { top: 4 },
+        series: [{ type: 'pie', radius: '62%', center: ['50%', '56%'], data, label: { formatter: '{b} {c}' } }]
+      }));
+    });
+    // 隐患：一般/重大
+    const c4 = chartCard('隐患管理（一般/重大）', 'chart-hd');
+    chartRow2.appendChild(c4.card);
+    after.push(() => {
+      const general = hds.filter(h => h.level === '一般隐患');
+      const major = hds.filter(h => h.level === '重大隐患');
+      ui.chart(c4.body, ui.baseOption({
+        legend: { top: 4, data: ['一般隐患', '重大隐患'] },
+        xAxis: { type: 'category', data: ['总览', '整改中', '已关闭'] },
+        yAxis: { type: 'value', minInterval: 1 },
+        series: [
+          { name: '一般隐患', type: 'bar', stack: 'a', data: [general.length, general.filter(h => h.status !== '已关闭').length, general.filter(h => h.status === '已关闭').length], itemStyle: { color: '#E0A024' }, barMaxWidth: 40 },
+          { name: '重大隐患', type: 'bar', stack: 'a', data: [major.length, major.filter(h => h.status !== '已关闭').length, major.filter(h => h.status === '已关闭').length], itemStyle: { color: '#C0392B' }, barMaxWidth: 40 }
+        ]
+      }));
+    });
+    root.appendChild(chartRow2);
+
+    /* ---------- 通告 / 风险提示 ---------- */
+    const row3 = el('div', { class: 'grid g2 mt' });
+    // 安全通告
+    const ntCard = el('div', { class: 'card' }, [
+      el('div', { class: 'card-h' }, [el('div', { class: 't', html: ui.icon('bell') + ' 安全通告' }), el('a', { class: 'small', text: '更多' })]),
+      el('div', { class: 'card-b' }, [noticeFeed(S.all('notices').slice(0, 6))])
+    ]);
+    row3.appendChild(ntCard);
+    // 风险提示
+    const warnHz = hazards.filter(h => h.isWarn || h.level === '高度' || h.level === '不可接受').slice(0, 7);
+    const warnCard = el('div', { class: 'card' }, [
+      el('div', { class: 'card-h' }, [el('div', { class: 't', html: ui.icon('alert') + ' 风险提示' }), el('span', { class: 'sim-tag', text: '动态预警' })]),
+      el('div', { class: 'card-b' }, [warnFeed(warnHz)])
+    ]);
+    row3.appendChild(warnCard);
+    root.appendChild(row3);
+
+    /* ---------- 机场运行日报 ---------- */
+    const opsCard = el('div', { class: 'card mt' }, [
+      el('div', { class: 'card-h' }, [
+        el('div', { class: 't', html: ui.icon('chart') + ' 机场运行情况日报（A-CDM 模拟）' }),
+        el('button', { class: 'btn btn-sm', html: ui.icon('download') + ' 导出 Excel', onClick: exportOps })
+      ]),
+      el('div', { class: 'table-scroll' }, [opsTable(S.all('dailyOps'))])
+    ]);
+    root.appendChild(opsCard);
+
+    requestAnimationFrame(() => after.forEach(f => f()));
+    return root;
+  }
+
+  function chartCard(title, id) {
+    const body = el('div', { id: id, class: 'chart', style: { height: '262px' } });
+    const card = el('div', { class: 'card' }, [
+      el('div', { class: 'card-h' }, [el('div', { class: 't', text: title })]),
+      el('div', { class: 'card-b' }, [body])
+    ]);
+    return { card, body };
+  }
+  function noticeFeed(list) {
+    const wrap = el('div', { class: 'list-feed' });
+    list.forEach(n => {
+      wrap.appendChild(el('div', { class: 'feed-item' }, [
+        el('div', { class: 'fi-dot', style: { background: '#2E75B6' } }),
+        el('div', { class: 'fi-body' }, [
+          el('div', { class: 'fi-t', text: n.title }),
+          el('div', { class: 'fi-m' }, [el('span', { text: n.type }), el('span', { text: n.date })])
+        ])
+      ]));
+    });
+    return wrap;
+  }
+  function warnFeed(list) {
+    const wrap = el('div', { class: 'list-feed' });
+    if (!list.length) return ui.empty('当前无高风险预警');
+    list.forEach(h => {
+      const item = el('div', { class: 'feed-item' }, [
+        el('div', { class: 'fi-dot', style: { background: h.levelTone === 'red' ? '#C0392B' : '#E8833A' } }),
+        el('div', { class: 'fi-body' }, [
+          el('div', { class: 'fi-t', text: U.truncate(h.desc, 26) }),
+          el('div', { class: 'fi-m' }, [
+            el('span', {}, [ui.levelBadge(h.level)]),
+            el('span', { text: deptName(h.respDeptId) }),
+            el('span', { text: '关联 ' + h.triggerCount + ' 次' })
+          ])
+        ])
+      ]);
+      item.addEventListener('click', () => SMS.router.go('risk/hazard'));
+      wrap.appendChild(item);
+    });
+    return wrap;
+  }
+  function opsTable(list) {
+    const t = el('table', { class: 'dt' });
+    const trh = el('tr', ['日期', '航班架次', '旅客吞吐量', '整改问题数', '已关闭数'].map(x => el('th', { text: x })));
+    const thead = el('thead'); thead.appendChild(trh); t.appendChild(thead);
+    const tb = el('tbody');
+    list.forEach(d => {
+      tb.appendChild(el('tr', [d.date, d.flights, U.fmtNum(d.pax), d.issue, d.closed].map(v => el('td', { text: v }))));
+    });
+    t.appendChild(tb);
+    return t;
+  }
+  function exportOps() {
+    U.exportCSV('机场运行日报.csv',
+      [{ title: '日期', field: 'date' }, { title: '航班架次', field: 'flights' }, { title: '旅客吞吐量', field: 'pax' }, { title: '整改问题数', field: 'issue' }, { title: '已关闭数', field: 'closed' }],
+      S.all('dailyOps'));
+    ui.toast('运行日报已导出', 'ok');
+  }
+
+  SMS.registerModule({
+    id: 'dashboard',
+    menus: [
+      { group: 'home', name: '公司级首页', icon: 'dashboard', route: 'home/company', order: 1 },
+      { group: 'home', name: '部门级首页', icon: 'home', route: 'home/department', order: 2 }
+    ],
+    routes: [
+      { path: 'home/company', name: '公司级首页', group: 'home', render: () => build(true) },
+      { path: 'home/department', name: '部门级首页', group: 'home', render: () => build(false) }
+    ]
+  });
+})();
+
+
+/* ===== modules/workbench.js ===== */
+/* =====================================================================
+   modules/workbench.js — 个人中心 / 工作台（D1）
+   待处理任务（到期标红）、待处理督办、我的培训、已处理任务；
+   分类别统计/查询、节点提醒、流程跳转。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS, S = SMS.store, U = SMS.util, ui = SMS.ui;
+  const el = U.el;
+  const deptName = id => { const d = S.get('departments', id); return d ? d.name : '—'; };
+
+  function myTodos(status) {
+    const u = SMS.auth.user();
+    return S.all('todos').filter(t => t.assigneeId === u.id && t.status === status);
+  }
+
+  function build() {
+    const root = el('div');
+    const u = SMS.auth.user();
+
+    const todo = myTodos('待办');
+    const overdue = todo.filter(t => U.dueState(t.dueDate) === 'overdue');
+    const myTrain = S.all('trainings').filter(t => (t.users || []).includes(u.id) && t.status !== '已完成');
+    const myExam = S.all('examTasks').filter(t => (t.users || []).includes(u.id) && t.status === '待考');
+
+    /* 概览卡 */
+    const statRow = el('div', { class: 'grid g4' }, [
+      ui.statCard({ icon: 'clock', tone: 'var(--brand)', toneBg: 'var(--brand-soft)', value: todo.length, label: '待处理任务', sub: '待办 ' + todo.length + ' 项' }),
+      ui.statCard({ icon: 'alert', tone: 'var(--danger)', toneBg: 'var(--danger-soft)', value: overdue.length, label: '已逾期待办', sub: overdue.length ? '请尽快处理' : '无逾期', dir: overdue.length ? 'up' : 'down' }),
+      ui.statCard({ icon: 'book', tone: 'var(--teal)', toneBg: 'var(--teal-soft)', value: myTrain.length, label: '我的培训', sub: '待考 ' + myExam.length + ' 项' }),
+      ui.statCard({ icon: 'check', tone: 'var(--accent)', toneBg: 'var(--accent-soft)', value: myTodos('已完成').length, label: '已处理任务', sub: '累计完成' })
+    ]);
+    root.appendChild(statRow);
+
+    /* 逾期提醒横幅 */
+    if (overdue.length) {
+      const banner = el('div', {
+        class: 'mt', style: { background: 'var(--danger-soft)', border: '1px solid var(--danger)', borderRadius: '8px', padding: '10px 14px', display: 'flex', gap: '10px', alignItems: 'center', color: 'var(--danger)' }
+      }, [el('span', { html: ui.icon('alert', 18) }), el('span', { text: '您有 ' + overdue.length + ' 项任务已超过办理期限，系统已自动催办并升级，请优先处理。' })]);
+      root.appendChild(banner);
+    }
+
+    /* 标签页 */
+    const tabs = ui.tabs({
+      tabs: [
+        { key: 'todo', label: '待处理任务', count: todo.length, render: b => b.appendChild(taskTable(todo, false)) },
+        { key: 'sup', label: '待处理督办', count: todo.filter(t => t.type === 'supervision').length, render: b => b.appendChild(taskTable(todo.filter(t => t.type === 'supervision'), false)) },
+        { key: 'train', label: '我的培训', count: myTrain.length + myExam.length, render: b => { b.appendChild(trainBlock(myTrain, myExam)); } },
+        { key: 'done', label: '已处理任务', count: myTodos('已完成').length, render: b => b.appendChild(taskTable(myTodos('已完成'), true)) }
+      ]
+    });
+    root.appendChild(el('div', { class: 'mt' }, [tabs]));
+    return root;
+  }
+
+  function taskTable(list, done) {
+    const wrap = el('div', { class: 'table-wrap' });
+    const scroll = el('div', { class: 'table-scroll' });
+    const t = el('table', { class: 'dt' });
+    const trh = el('tr', ['任务名称', '类别', '来源', '承办部门', '要求完成', '状态'].map(x => el('th', { text: x })));
+    const thead = el('thead'); thead.appendChild(trh); t.appendChild(thead);
+    const tb = el('tbody');
+    if (!list.length) {
+      const tr = el('tr'), td = el('td', { colspan: 6 }); td.appendChild(ui.empty(done ? '暂无已处理记录' : '暂无待办任务')); tr.appendChild(td); tb.appendChild(tr);
+    }
+    list.forEach(x => {
+      const due = U.dueState(x.dueDate);
+      const cls = !done && due === 'overdue' ? 'overdue' : '';
+      const tr = el('tr', { class: cls, style: { cursor: 'pointer' } });
+      tr.appendChild(el('td', { html: '<span class="cell-main">' + U.escapeHtml(x.title) + '</span>' }));
+      tr.appendChild(el('td', { text: x.category }));
+      tr.appendChild(el('td', { text: x.source }));
+      tr.appendChild(el('td', { text: deptName(x.deptId) }));
+      tr.appendChild(el('td', {
+        html: U.escapeHtml(x.dueDate) + (!done && due === 'overdue' ? ' <span class="badge red">已逾期</span>' : !done && due === 'due' ? ' <span class="badge orange">临期</span>' : '')
+      }));
+      const st = done ? ui.badge('已完成', 'green') : ui.badge('待办', x.dueDate && due === 'overdue' ? 'red' : 'blue');
+      tr.appendChild(el('td', {}, [st]));
+      tr.addEventListener('click', () => SMS.router.go(x.route));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); scroll.appendChild(t); wrap.appendChild(scroll);
+    return wrap;
+  }
+
+  function trainBlock(train, exam) {
+    const wrap = el('div');
+    if (train.length) {
+      wrap.appendChild(el('div', { class: 'section-title', text: '待完成培训' }));
+      const cw = el('div', { class: 'grid g2' });
+      train.forEach(t => {
+        cw.appendChild(el('div', { class: 'card' }, [el('div', { class: 'card-b' }, [
+          el('div', { class: 'strong', text: t.name }),
+          el('div', { class: 'small muted mt', html: '计划 ' + t.planDate + ' · ' + t.way + ' · 学时 ' + t.hours + ' 分钟' }),
+          el('div', { class: 'mt' }, [el('span', { class: 'btn btn-sm btn-primary', text: '进入学习', onClick: () => SMS.router.go('promotion/training') })])
+        ])]));
+      });
+      wrap.appendChild(cw);
+    }
+    if (exam.length) {
+      wrap.appendChild(el('div', { class: 'section-title', text: '待办考试' }));
+      const ew = el('div', { class: 'grid g2' });
+      exam.forEach(t => {
+        ew.appendChild(el('div', { class: 'card' }, [el('div', { class: 'card-b' }, [
+          el('div', { class: 'strong', text: t.name }),
+          el('div', { class: 'small muted mt', html: '考试时间 ' + t.planDate + ' · 时长 ' + t.duration + ' 分钟' }),
+          el('div', { class: 'mt' }, [el('span', { class: 'btn btn-sm btn-accent', text: '进入考试', onClick: () => SMS.router.go('promotion/exam') })])
+        ])]));
+      });
+      wrap.appendChild(ew);
+    }
+    if (!train.length && !exam.length) wrap.appendChild(ui.empty('暂无培训与考试安排'));
+    return wrap;
+  }
+
+  SMS.registerModule({
+    id: 'workbench',
+    menus: [{ group: 'workbench', name: '我的工作台', icon: 'home', route: 'workbench/view', order: 1 }],
+    routes: [{ path: 'workbench/view', name: '我的工作台', group: 'workbench', render: () => build() }]
+  });
+})();
+
+
+/* ===== modules/risk.js ===== */
+/* =====================================================================
+   modules/risk.js — 安全风险管理（D3）
+   危险源管理（全字段 + 动态评价 + AI 智能推荐 I2）、专项风险管理、
+   风险评价标准（可配置 / 可切换）、风险矩阵热力图、变更自动触发。
+   风险值 = 可能性 L × 严重性 S（默认 5×5，标准可切换）。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS, S = SMS.store, U = SMS.util, ui = SMS.ui;
+  const el = U.el;
+
+  const deptOpts = () => S.all('departments').map(d => ({ value: d.id, label: d.name }));
+  const deptName = id => { const d = S.get('departments', id); return d ? d.name : '—'; };
+  const facOpts = () => S.all('facilities').map(f => ({ value: f.id, label: f.name }));
+  const postOpts = () => S.all('posts').map(p => ({ value: p.id, label: p.name }));
+
+  /* ============== 评价标准（可切换） ============== */
+  // 默认阈值：1-2 可忽略 / 3-4 低度 / 5-9 中度 / 10-15 高度 / 16-25 不可接受
+  const DEFAULT_STD = { id: 'std-default', name: '机场通用风险评价标准（L×S 五级）', method: '风险值=可能性×严重性', ignoreMax: 2, lowMax: 4, midMax: 9, highMax: 15, isCurrent: 1, note: '依据《民用机场安全管理体系建设指南》风险评价矩阵，结合机场运行实际设定。' };
+
+  function standards() { let list = S.all('riskStandards'); if (!list.length) { S.insert('riskStandards', U.clone(DEFAULT_STD)); list = S.all('riskStandards'); } return list; }
+  function currentStd() { const c = standards().find(x => x.isCurrent === 1) || standards()[0]; return c; }
+  function levelOf(v) {
+    const s = currentStd();
+    if (v <= s.ignoreMax) return '可忽略';
+    if (v <= s.lowMax) return '低度';
+    if (v <= s.midMax) return '中度';
+    if (v <= s.highMax) return '高度';
+    return '不可接受';
+  }
+  const ACCEPT_OF = { '可忽略': '可接受', '低度': '可接受', '中度': '缓解后可接受', '高度': '不可接受', '不可接受': '不可接受' };
+
+  SMS.riskLevel = { levelOf, currentStd, standards, ACCEPT_OF };
+
+  /* ============== AI 智能风险评价（I2，规则可解释） ============== */
+  // 关键词规则：类别 → 严重性基准、措施
+  const RULES = [
+    { keys: ['跑道侵入', '跑道', '道面', 'FOD', '外来物', '摩擦系数'], cat: '飞行区/道面', S: 4, measures: '加强跑道徒步与车巡频次；FOD 随手拍与即时清理；道面破损限时修补并复检摩擦系数；关键时段运行管制员双岗复核。' },
+    { keys: ['鸟击', '鸟类', '鸟情', '鸟巢'], cat: '鸟害', S: 3, measures: '生态环境治理（除草、清淤、灭虫）；声光煤气炮组合驱鸟并轮换；鸟情高发时段加密巡视；鸟击标本留存与种群分析。' },
+    { keys: ['雷击', '雷雨', '闪电', '强对流'], cat: '气象灾害', S: 4, measures: '雷雨季节前完成防雷检测；接收气象预警提前停场固定设备；户外作业撤离与设备接地；事后专项排查。' },
+    { keys: ['除冰', '低温', '冰雪', '冻', '霜'], cat: '冬季运行', S: 3, measures: '除防冰液储备与设备检定；除冰液配比与保持时间记录；低温道面除冰雪预案；人员防滑与车辆限速。' },
+    { keys: ['机坪', '车辆', '碰撞', '碾压', '车速', '驾驶员'], cat: '机坪运行', S: 3, measures: '机坪车辆限速与路线管理；驾驶员资质年审与实操考核；重点区域设减速与警示；违章记分与停岗培训。' },
+    { keys: ['加油', '油料', '航油', '溢油', '静电'], cat: '供油', S: 4, measures: '加油设备静电接地与防溢漏检查；加油作业禁区管控；溢油应急处置演练；油料人员持证上岗。' },
+    { keys: ['净空', '无人机', '升空', '超高', '塔吊'], cat: '净空保护', S: 4, measures: '净空保护区巡查与超高障碍物管控；无人机联防联控与举报；施工塔吊限高与警示灯；地方协同执法。' },
+    { keys: ['行李', '装卸', '货舱', '传送带', '卡货'], cat: '地面保障', S: 2, measures: '装卸作业规范与舱门监护；传送带定期检修；货物系固与重量配平；人员防夹伤培训。' },
+    { keys: ['安检', '违禁品', '图像识别', '漏检'], cat: '安检', S: 4, measures: '安检图像识别训练与月度考核；开机员双人复核；违禁品处置流程；设备校准与应急通道管理。' },
+    { keys: ['消防', '火情', '火灾', '起火', '疏散'], cat: '消防', S: 5, measures: '消防设施器材月检与维保；重点防火部位巡查；消防演练与疏散；用电用气安全检查。' },
+    { keys: ['信息系统', '网络', '数据', '系统故障', '宕机'], cat: '信息系统', S: 3, measures: '关键系统双机热备与数据备份；网络安全等保防护；故障应急预案与演练；权限最小化与日志审计。' }
+  ];
+
+  function similarity(a, b) { // 简易 Jaccard（2-gram）
+    const ga = new Set(), gb = new Set();
+    for (let i = 0; i < a.length - 1; i++) ga.add(a.slice(i, i + 2));
+    for (let i = 0; i < b.length - 1; i++) gb.add(b.slice(i, i + 2));
+    let inter = 0; ga.forEach(x => { if (gb.has(x)) inter++; });
+    return inter / (ga.size + gb.size - inter || 1);
+  }
+
+  function aiRecommend(text) {
+    text = text || '';
+    let rule = null, hit = [];
+    for (const r of RULES) {
+      const h = r.keys.filter(k => text.indexOf(k) >= 0);
+      if (h.length > hit.length) { rule = r; hit = h; }
+    }
+    // 历史相似案例
+    const hist = S.all('hazards').map(h => ({ h, sim: similarity(text, h.name + h.scene + h.desc) })).filter(x => x.sim > 0.18).sort((a, b) => b.sim - a.sim).slice(0, 3);
+    let L = 2, S2 = rule ? rule.S : 2;
+    if (hist.length) {
+      L = Math.round(U.sum(hist, x => x.h.likelihood) / hist.length);
+      S2 = Math.max(S2, Math.round(U.sum(hist, x => x.h.severity) / hist.length));
+    }
+    // 季节/天气修正可能性
+    const m = Number(U.today().slice(5, 7));
+    if (rule && ((rule.cat === '气象灾害' && (m >= 4 && m <= 8)) || (rule.cat === '冬季运行' && (m === 12 || m <= 2)) || (rule.cat === '鸟害' && (m >= 3 && m <= 5 || m >= 9 && m <= 11)))) L = Math.min(5, L + 1);
+    if (text.indexOf('反复') >= 0 || text.indexOf('多次') >= 0 || text.indexOf('频繁') >= 0) L = Math.min(5, L + 1);
+    L = U.clamp(L, 1, 5); S2 = U.clamp(S2, 1, 5);
+    const v = L * S2, level = levelOf(v);
+    const reasons = [];
+    if (rule) reasons.push('匹配“' + rule.cat + '”关键词（' + hit.join('、') + '），严重性基准取 ' + S2);
+    if (hist.length) reasons.push('检索到 ' + hist.length + ' 个相似历史案例，可能性参考其均值');
+    reasons.push('结合当前季节/频次修正后 L=' + L + '、S=' + S2);
+    return {
+      likelihood: L, severity: S2, riskValue: v, level, acceptability: ACCEPT_OF[level],
+      measures: rule ? rule.measures : '建议组织专项辨识，明确责任岗位，从工程控制、管理控制、培训与个体防护等方面制定措施并跟踪验证。',
+      reason: reasons.join('；') + '。结果为算法推荐，须由安全管理人员人工确认。',
+      cases: hist.map(x => x.h.id)
+    };
+  }
+  SMS.aiRisk = { recommend: aiRecommend, similarity };
+
+  /* ============== 危险源管理 ============== */
+  const CATS = ['飞行区运行', '机坪运行', '净空保护', '气象灾害', '鸟害防治', '供油保障', '地面保障', '安检保卫', '消防应急', '信息系统', '冬季运行'];
+  const SYSTEMS = ['安全政策', '风险管理', '安全保证', '安全促进'];
+  const HD_STATUS = ['待评价', '已评价', '管控中', '已消除'];
+  const SOURCES = ['日常辨识', '专项辨识', '事件调查', '隐患转化', '变更触发', '外部反馈'];
+
+  const hazardFields = [
+    { field: 'code', label: '危险源编号', type: 'readonly', placeholder: '保存时自动生成' },
+    { field: 'name', label: '危险源名称', required: true, span: 2 },
+    { field: 'category', label: '安全类别', type: 'select', options: CATS, required: true },
+    { field: 'system', label: '所属体系', type: 'select', options: SYSTEMS },
+    { field: 'facilityId', label: '关联设施', type: 'select', options: facOpts },
+    { field: 'positionId', label: '关联岗位', type: 'select', options: postOpts },
+    { field: 'scene', label: '危险源场景描述', type: 'textarea', span: 2, placeholder: '描述危险源产生的场景、触发条件' },
+    { field: 'desc', label: '可能导致的后果', type: 'textarea', span: 2 },
+    { field: 'respDeptId', label: '责任部门', type: 'select', options: deptOpts, required: true },
+    { field: 'respPostId', label: '责任岗位', type: 'select', options: postOpts },
+    { field: 'likelihood', label: '可能性 L(1-5)', type: 'number', required: true, min: 1, max: 5 },
+    { field: 'severity', label: '严重性 S(1-5)', type: 'number', required: true, min: 1, max: 5 },
+    { field: 'ai', label: '智能评价', type: 'button', span: 2, icon: 'sparkle', text: 'AI 根据描述与历史案例推荐等级和管控措施（人工确认）', cls: 'btn btn-teal',
+      onClick: api => {
+        const r0 = api.rec();
+        const text = [r0.name, r0.scene, r0.desc].filter(Boolean).join(' ');
+        if (!text.trim()) { ui.toast('请先填写危险源名称、场景或后果描述', 'warn'); return; }
+        const rec = aiRecommend(text);
+        api.set('likelihood', rec.likelihood); api.set('severity', rec.severity);
+        api.set('controlMeasures', rec.measures); api.set('expertEval', rec.reason);
+        ui.toast('已生成推荐：' + rec.level + '（' + rec.riskValue + '），请人工确认', 'ok');
+      } },
+    { field: 'riskValue', label: '风险值', type: 'readonly' },
+    { field: 'level', label: '风险等级', type: 'readonly' },
+    { field: 'acceptability', label: '可接受性', type: 'readonly' },
+    { field: 'expertEval', label: '专家/小组评价意见', type: 'textarea', span: 2 },
+    { field: 'controlMeasures', label: '管控措施', type: 'textarea', span: 2 },
+    { field: 'residualL', label: '剩余 L', type: 'number', min: 1, max: 5 },
+    { field: 'residualS', label: '剩余 S', type: 'number', min: 1, max: 5 },
+    { field: 'residualValue', label: '剩余风险值', type: 'readonly' },
+    { field: 'residualLevel', label: '剩余等级', type: 'readonly' },
+    { field: 'status', label: '状态', type: 'select', options: HD_STATUS, default: '待评价' },
+    { field: 'foundDate', label: '识别日期', type: 'date' },
+    { field: 'source', label: '来源', type: 'select', options: SOURCES },
+    { field: 'isWarn', label: '纳入动态预警', type: 'switch', default: false },
+    { field: 'warnValue', label: '预警阈值(关联次数)', type: 'number', min: 0, default: 3 },
+    { field: 'triggerCount', label: '已关联触发次数', type: 'number', min: 0, default: 0 },
+    { field: 'remark', label: '备注', type: 'textarea', span: 2 }
+  ];
+
+  function hazardPage() {
+    return ui.crudPage({
+      title: '危险源管理', icon: 'shield', table: 'hazards', tableTitle: '危险源清单',
+      subtitle: '危险源辨识、动态评价、管控措施与剩余风险评价；风险值=可能性×严重性，评价标准可在“风险评价标准”中切换。',
+      columns: [
+        { field: 'code', title: '编号', width: '118px', click: r => {} },
+        { field: 'name', title: '危险源名称', render: (v, r) => '<span class="cell-main">' + U.escapeHtml(v) + '</span>' + (r.isWarn ? ' <span class="badge orange">预警</span>' : '') },
+        { field: 'category', title: '类别', width: '96px' },
+        { field: 'respDeptId', title: '责任部门', width: '120px', render: v => deptName(v) },
+        { field: 'riskValue', title: '风险值', width: '70px', badge: (v, r) => r.levelTone === 'red' ? 'red' : r.levelTone === 'orange' ? 'orange' : '' },
+        { field: 'level', title: '等级', width: '86px', render: v => ui.levelBadge(v).outerHTML },
+        { field: 'status', title: '状态', width: '86px', badge: 'blue' },
+        { field: 'foundDate', title: '识别日期', width: '104px' }
+      ],
+      filters: [
+        { field: 'keyword', label: '关键字', type: 'text', placeholder: '名称/编号' },
+        { field: 'category', label: '类别', type: 'select', options: CATS },
+        { field: 'level', label: '等级', type: 'select', options: ['可忽略', '低度', '中度', '高度', '不可接受'] },
+        { field: 'respDeptId', label: '责任部门', type: 'select', options: deptOpts }
+      ],
+      // 关键字过滤需要同时匹配 name/code，覆盖默认逻辑
+      data() {
+        return S.all('hazards');
+      },
+      fields: hazardFields, formSize: 'xl', addText: '辨识危险源',
+      onBeforeSave(rec, mode, old) {
+        if (mode === 'add' && !rec.code) rec.code = nextCode();
+        if (!rec.foundDate) rec.foundDate = U.today();
+        rec.riskValue = (Number(rec.likelihood) || 0) * (Number(rec.severity) || 0);
+        rec.level = rec.riskValue ? levelOf(rec.riskValue) : '';
+        rec.acceptability = rec.level ? ACCEPT_OF[rec.level] : '';
+        rec.levelTone = ({ '可忽略': 'teal', '低度': 'teal', '中度': 'yellow', '高度': 'orange', '不可接受': 'red' })[rec.level] || '';
+        if (rec.residualL && rec.residualS) {
+          rec.residualValue = Number(rec.residualL) * Number(rec.residualS);
+          rec.residualLevel = levelOf(rec.residualValue);
+        }
+        rec.triggerCount = Number(rec.triggerCount) || 0;
+      },
+      detail: {
+        title: r => '危险源 ' + r.code, size: 'xl',
+        render(r) {
+          const wrap = el('div');
+          wrap.appendChild(ui.descList([
+            { label: '危险源名称', value: r.name, full: true }, { label: '安全类别', value: r.category }, { label: '所属体系', value: r.system },
+            { label: '关联设施', value: (S.get('facilities', r.facilityId) || {}).name }, { label: '关联岗位', value: (S.get('posts', r.positionId) || {}).name },
+            { label: '场景描述', value: r.scene, full: true }, { label: '可能后果', value: r.desc, full: true },
+            { label: '责任部门', value: deptName(r.respDeptId) }, { label: '责任岗位', value: (S.get('posts', r.respPostId) || {}).name },
+            { label: '可能性 L', value: r.likelihood }, { label: '严重性 S', value: r.severity },
+            { label: '风险值', value: r.riskValue }, { label: '风险等级', valueDom: ui.levelBadge(r.level) },
+            { label: '可接受性', value: r.acceptability }, { label: '状态', value: r.status },
+            { label: '专家评价', value: r.expertEval, full: true }, { label: '管控措施', value: r.controlMeasures, full: true },
+            { label: '剩余风险', value: (r.residualValue ? r.residualValue + '（' + r.residualLevel + '）' : '未评价'), full: true },
+            { label: '动态预警', value: r.isWarn ? '是，阈值 ' + r.warnValue + '，已关联 ' + r.triggerCount + ' 次' : '否' }
+          ]));
+          return wrap;
+        }
+      },
+      actions: [
+        { label: '转专项', show: r => r.level === '高度' || r.level === '不可接受', onClick: r => { createSpecialFromHazard(r); } }
+      ],
+      rowClass(r) { return r.isWarn && r.triggerCount >= r.warnValue ? 'warn-row' : ''; }
+    });
+  }
+
+  function nextCode() {
+    const year = U.today().slice(0, 4);
+    const n = S.all('hazards').filter(h => (h.code || '').indexOf('WXY-' + year) === 0).length + 1;
+    return 'WXY-' + year + '-' + String(n).padStart(3, '0');
+  }
+
+  /* ============== 专项风险管理 ============== */
+  const SP_TYPES = ['专项辨识', '变更触发', '季节专项', '重大活动保障'];
+  const SP_STATUS = ['进行中', '已完成', '已关闭'];
+  const specialFields = [
+    { field: 'code', label: '编号', type: 'readonly' },
+    { field: 'name', label: '专项名称', required: true, span: 2 },
+    { field: 'type', label: '类型', type: 'select', options: SP_TYPES, required: true },
+    { field: 'respDeptId', label: '牵头部门', type: 'select', options: deptOpts, required: true },
+    { field: 'startDate', label: '开始日期', type: 'date' },
+    { field: 'endDate', label: '结束日期', type: 'date' },
+    { field: 'status', label: '状态', type: 'select', options: SP_STATUS, default: '进行中' },
+    { field: 'relatedProject', label: '关联项目/变更', span: 2 },
+    { field: 'hazardIds', label: '关联危险源(编号，分号分隔)', type: 'textarea', span: 2 },
+    { field: 'taskLines', label: '任务下发（每行：部门编号|任务内容|截止日期）', type: 'textarea', span: 2, placeholder: 'dept-ar|完成跑道FOD专项排查|2026-10-15' },
+    { field: 'conclusion', label: '专项结论', type: 'textarea', span: 2 },
+    { field: 'remark', label: '备注', type: 'textarea', span: 2 }
+  ];
+  function specialPage() {
+    return ui.crudPage({
+      title: '专项风险管理', icon: 'flag', table: 'specialRisks', tableTitle: '专项风险清单',
+      subtitle: '针对专项作业、季节运行、重大活动与变更管理开展专项风险辨识，可向多部门下发任务并跟踪。',
+      columns: [
+        { field: 'code', title: '编号', width: '120px' },
+        { field: 'name', title: '专项名称', render: v => '<span class="cell-main">' + U.escapeHtml(v) + '</span>' },
+        { field: 'type', title: '类型', width: '110px', badge: 'purple' },
+        { field: 'respDeptId', title: '牵头部门', width: '120px', render: v => deptName(v) },
+        { field: 'startDate', title: '开始', width: '104px' },
+        { field: 'endDate', title: '结束', width: '104px' },
+        { field: 'status', title: '状态', width: '90px', badge: v => v === '进行中' ? 'orange' : 'green' }
+      ],
+      filters: [
+        { field: 'type', label: '类型', type: 'select', options: SP_TYPES },
+        { field: 'status', label: '状态', type: 'select', options: SP_STATUS }
+      ],
+      fields: specialFields, formSize: 'xl',
+      extraActions: [
+        { label: '模拟变更触发', icon: 'flow', cls: 'btn', onClick: simulateChange }
+      ],
+      onBeforeSave(rec, mode) {
+        if (mode === 'add' && !rec.code) {
+          const n = S.all('specialRisks').length + 1;
+          rec.code = 'ZX-' + U.today().slice(0, 4) + '-' + String(n).padStart(3, '0');
+        }
+        if (!rec.startDate) rec.startDate = U.today();
+      },
+      onSaved(rec, mode) {
+        // 解析任务下发，按部门生成待办
+        (rec.taskLines || '').split('\n').map(s => s.trim()).filter(Boolean).forEach(line => {
+          const [did, content, due] = line.split('|');
+          if (did && content) S.insert('todos', { title: content, category: '专项任务', type: 'special', assigneeId: (S.find('users', u => u.deptId === did) || {}).id, deptId: did, dueDate: due || rec.endDate || U.today(), route: 'risk/special', status: '待办', source: '专项 ' + rec.code });
+        });
+        if (rec.taskLines) ui.toast('已按部门下发专项任务', 'ok');
+      },
+      detail: {
+        title: r => '专项 ' + r.code, size: 'lg',
+        fields: specialFields,
+        render(r) {
+          const box = el('div');
+          const todos = S.all('todos').filter(t => t.source === '专项 ' + r.code);
+          if (todos.length) {
+            box.appendChild(el('div', { class: 'section-title', text: '任务下发与跟踪' }));
+            const t = el('table', { class: 'dt' });
+            const th = el('tr', ['承办部门', '任务', '截止', '状态'].map(x => el('th', { text: x })));
+            const thead = el('thead'); thead.appendChild(th); t.appendChild(thead);
+            const tb = el('tbody');
+            todos.forEach(td => tb.appendChild(el('tr', [deptName(td.deptId), td.title, td.dueDate].map(v => el('td', { text: v })).concat([el('td', {}, [ui.badge(td.status, td.status === '已完成' ? 'green' : 'blue')])]))));
+            t.appendChild(tb); box.appendChild(t);
+          }
+          return box;
+        }
+      }
+    });
+  }
+
+  function createSpecialFromHazard(h) {
+    const rec = {
+      name: h.name + '专项风险管控', type: '专项辨识', respDeptId: h.respDeptId, startDate: U.today(),
+      status: '进行中', relatedProject: '由危险源 ' + h.code + ' 转入', hazardIds: h.code,
+      taskLines: h.respDeptId + '|落实“' + h.name + '”管控措施并反馈|' + U.fmtDate(U.addDays(new Date(), 15))
+    };
+    const sp = S.insert('specialRisks', Object.assign(rec, { code: 'ZX-' + U.today().slice(0, 4) + '-' + String(S.all('specialRisks').length + 1).padStart(3, '0') }));
+    S.insert('todos', { title: '落实“' + h.name + '”管控措施并反馈', category: '专项任务', type: 'special', assigneeId: (S.find('users', u => u.deptId === h.respDeptId) || {}).id, deptId: h.respDeptId, dueDate: U.fmtDate(U.addDays(new Date(), 15)), route: 'risk/special', status: '待办', source: '专项 ' + sp.code });
+    ui.toast('已创建专项并下发任务', 'ok');
+  }
+
+  // 变更自动触发（设施/重点部位/机构/流程变更）
+  function triggerChange(change) {
+    const code = 'ZX-' + U.today().slice(0, 4) + '-' + String(S.all('specialRisks').length + 1).padStart(3, '0');
+    const sp = S.insert('specialRisks', {
+      code, name: '变更风险评估：' + change.name, type: '变更触发', respDeptId: 'dept-aq', startDate: U.today(),
+      status: '进行中', relatedProject: change.desc || change.name, hazardIds: '', taskLines: '',
+      conclusion: '', remark: '系统检测到变更，自动触发专项风险评估。'
+    });
+    S.insert('todos', { title: '完成变更“' + change.name + '”专项风险评估', category: '专项任务', type: 'special', assigneeId: 'user-aqadmin', deptId: 'dept-aq', dueDate: U.fmtDate(U.addDays(new Date(), 7)), route: 'risk/special', status: '待办', source: '专项 ' + code });
+    ui.toast('变更已自动触发专项风险评估', 'ok');
+    return sp;
+  }
+  SMS.riskTriggerChange = triggerChange;
+
+  function simulateChange() {
+    triggerChange({ name: '新增 03 号远机位登机桥', desc: '设施新增变更（模拟）' });
+  }
+
+  /* ============== 风险评价标准 ============== */
+  function criteriaPage() {
+    const root = el('div');
+    root.appendChild(el('div', { class: 'page-head' }, [
+      el('div', null, [el('h2', { html: ui.icon('gear', 19) + ' 风险评价标准' }), el('div', { class: 'desc', text: '支持多套评价标准的新增、编辑与切换；切换后危险源等级按当前标准重新判定。' })])
+    ]));
+    const grid = el('div', { class: 'grid g-2-1 mt' });
+    // 左：矩阵
+    const matrixCard = el('div', { class: 'card' }, [
+      el('div', { class: 'card-h' }, [el('div', { class: 't', id: 'std-title', text: currentStd().name })]),
+      el('div', { class: 'card-b' }, [matrixEl()])
+    ]);
+    grid.appendChild(matrixCard);
+    // 右：标准列表
+    const listCard = el('div', { class: 'card' }, [
+      el('div', { class: 'card-h' }, [el('div', { class: 't', text: '评价标准列表' }), el('button', { class: 'btn btn-sm btn-primary', html: ui.icon('plus') + ' 新增', onClick: addStd })]),
+      el('div', { class: 'card-b' }, [stdList(matrixCard)])
+    ]);
+    grid.appendChild(listCard);
+    root.appendChild(grid);
+    return root;
+  }
+  function matrixEl() {
+    const wrap = el('div');
+    const tbl = el('table', { class: 'risk-matrix' });
+    // 表头：严重性
+    let tr = el('tr');
+    tr.appendChild(el('th', { text: 'L↓ / S→' }));
+    for (let s = 1; s <= 5; s++) tr.appendChild(el('th', { text: 'S=' + s }));
+    const thead = el('thead'); thead.appendChild(tr); tbl.appendChild(thead);
+    const tb = el('tbody');
+    for (let l = 5; l >= 1; l--) {
+      const r = el('tr');
+      r.appendChild(el('th', { text: 'L=' + l }));
+      for (let s = 1; s <= 5; s++) {
+        const v = l * s, lv = levelOf(v);
+        const td = el('td', { class: 'rm-cell', style: { background: ui.LEVEL_COLORS[lv] }, html: '<b>' + v + '</b><span>' + lv + '</span>' });
+        td.title = lv + ' · ' + ACCEPT_OF[lv];
+        r.appendChild(td);
+      }
+      tb.appendChild(r);
+    }
+    tbl.appendChild(tb); wrap.appendChild(tbl);
+    wrap.appendChild(el('div', { class: 'small muted mt', text: '可接受性：可忽略/低度=可接受；中度=缓解后可接受；高度/不可接受=不可接受。' }));
+    return wrap;
+  }
+  function stdList(matrixCard) {
+    const wrap = el('div', { class: 'std-list' });
+    standards().forEach(s => {
+      const item = el('div', { class: 'std-item' + (s.isCurrent ? ' cur' : '') }, [
+        el('div', { class: 'std-n', text: s.name + (s.isCurrent ? '（当前）' : '') }),
+        el('div', { class: 'small muted', text: s.method + '；阈值 ' + s.ignoreMax + '/' + s.lowMax + '/' + s.midMax + '/' + s.highMax }),
+        el('div', { class: 'std-ops' }, [
+          s.isCurrent ? null : el('span', { class: 'act-link', text: '切换', onClick: () => switchStd(s, matrixCard) }),
+          el('span', { class: 'act-link', text: '编辑', onClick: () => editStd(s, matrixCard) })
+        ])
+      ]);
+      wrap.appendChild(item);
+    });
+    return wrap;
+  }
+  function refreshMatrix(matrixCard) {
+    const body = matrixCard.querySelector('.card-b');
+    U.clear(body); body.appendChild(matrixEl());
+    matrixCard.querySelector('#std-title').textContent = currentStd().name;
+  }
+  function switchStd(s, matrixCard) {
+    standards().forEach(x => S.update('riskStandards', x.id, { isCurrent: x.id === s.id ? 1 : 0 }));
+    // 重算全部危险源等级
+    S.all('hazards').forEach(h => {
+      const v = (Number(h.likelihood) || 0) * (Number(h.severity) || 0);
+      const lv = v ? levelOf(v) : h.level;
+      S.update('hazards', h.id, { level: lv, acceptability: lv ? ACCEPT_OF[lv] : h.acceptability });
+    });
+    refreshMatrix(matrixCard);
+    ui.toast('已切换标准并重算危险源等级', 'ok');
+  }
+  function stdForm(s) {
+    return ui.renderForm([
+      { field: 'name', label: '标准名称', required: true, span: 2 },
+      { field: 'method', label: '评价方法', default: '风险值=可能性×严重性' },
+      { field: 'ignoreMax', label: '可忽略上界', type: 'number', min: 1, max: 24, required: true },
+      { field: 'lowMax', label: '低度上界', type: 'number', min: 1, max: 24, required: true },
+      { field: 'midMax', label: '中度上界', type: 'number', min: 1, max: 24, required: true },
+      { field: 'highMax', label: '高度上界', type: 'number', min: 1, max: 24, required: true },
+      { field: 'note', label: '说明', type: 'textarea', span: 2 }
+    ], s || {});
+  }
+  function addStd() {
+    const f = stdForm(null);
+    ui.modal({ title: '新增评价标准', icon: 'plus', size: 'lg', body: f.el, okText: '保存', onOk: (b, close) => {
+      if (!f.validate()) return;
+      const rec = f.rec(); rec.isCurrent = 0;
+      S.insert('riskStandards', rec); close(); ui.toast('已新增标准，可在列表中切换', 'ok');
+    } });
+  }
+  function editStd(s, matrixCard) {
+    const f = stdForm(s);
+    ui.modal({ title: '编辑评价标准', icon: 'edit', size: 'lg', body: f.el, okText: '保存', onOk: (b, close) => {
+      if (!f.validate()) return;
+      S.update('riskStandards', s.id, f.rec()); close();
+      if (s.isCurrent) refreshMatrix(matrixCard);
+      ui.toast('已保存', 'ok');
+    } });
+  }
+
+  /* ============== 风险矩阵热力图（含危险源计数） ============== */
+  function matrixHeatPage() {
+    const root = el('div');
+    root.appendChild(el('div', { class: 'page-head' }, [el('div', null, [el('h2', { html: ui.icon('chart', 19) + ' 风险矩阵分布' }), el('div', { class: 'desc', text: '按可能性×严重性统计危险源在各单元格的数量，识别重大、高频危险源。' })])]));
+    const card = el('div', { class: 'card mt' }, [el('div', { class: 'card-b' }, [heatEl()])]);
+    root.appendChild(card);
+    return root;
+  }
+  function heatEl() {
+    const wrap = el('div');
+    const chart = el('div', { style: { height: '420px' } });
+    wrap.appendChild(chart);
+    requestAnimationFrame(() => {
+      const data = [];
+      for (let l = 1; l <= 5; l++) for (let s = 1; s <= 5; s++) {
+        const cnt = S.all('hazards').filter(h => Number(h.likelihood) === l && Number(h.severity) === s).length;
+        data.push([s - 1, l - 1, cnt]);
+      }
+      const pieces = [
+        { gte: 16, color: '#C0392B' }, { gte: 10, lte: 15, color: '#E8833A' },
+        { gte: 5, lte: 9, color: '#E0A024' }, { gte: 3, lte: 4, color: '#9CC3A0' }, { lte: 2, color: '#7FB069' }
+      ];
+      ui.chart(chart, ui.baseOption({
+        tooltip: { formatter: p => 'L=' + (p.value[1] + 1) + ' S=' + (p.value[0] + 1) + '<br/>危险源 ' + p.value[2] + ' 项' },
+        grid: { left: 60, right: 30, top: 30, bottom: 50 },
+        xAxis: { type: 'category', data: ['S=1', 'S=2', 'S=3', 'S=4', 'S=5'], name: '严重性', nameLocation: 'middle', nameGap: 28 },
+        yAxis: { type: 'category', data: ['L=1', 'L=2', 'L=3', 'L=4', 'L=5'], name: '可能性', nameLocation: 'middle', nameGap: 38 },
+        visualMap: { show: false, type: 'piecewise', dimension: 2, pieces: [{ gt: 0, color: '#1F4E79' }] },
+        series: [{
+          type: 'heatmap', data, label: { show: true, formatter: p => p.value[2] || '' },
+          itemStyle: { borderColor: '#fff', borderWidth: 2 },
+          emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,.3)' } }
+        }]
+      }));
+    });
+    // 高频/重大危险源清单
+    const top = S.all('hazards').filter(h => h.level === '高度' || h.level === '不可接受' || h.triggerCount >= 3);
+    wrap.appendChild(el('div', { class: 'section-title', text: '重大 / 高频危险源' }));
+    const t = el('table', { class: 'dt' });
+    const thead = el('thead'); thead.appendChild(el('tr', ['编号', '危险源', '等级', '关联次数', '责任部门'].map(x => el('th', { text: x })))); t.appendChild(thead);
+    const tb = el('tbody');
+    top.forEach(h => tb.appendChild(el('tr', [
+      el('td', { text: h.code }), el('td', { text: h.name }),
+      el('td', {}, [ui.levelBadge(h.level)]), el('td', { text: h.triggerCount }), el('td', { text: deptName(h.respDeptId) })
+    ])));
+    t.appendChild(tb); wrap.appendChild(t);
+    return wrap;
+  }
+
+  /* ============== 注册 ============== */
+  SMS.registerModule({
+    id: 'risk',
+    menus: [
+      { group: 'risk', name: '危险源管理', icon: 'shield', route: 'risk/hazard', order: 1 },
+      { group: 'risk', name: '专项风险管理', icon: 'flag', route: 'risk/special', order: 2 },
+      { group: 'risk', name: '风险评价标准', icon: 'gear', route: 'risk/criteria', order: 3 },
+      { group: 'risk', name: '风险矩阵', icon: 'chart', route: 'risk/matrix', order: 4 }
+    ],
+    routes: [
+      { path: 'risk/hazard', name: '危险源管理', group: 'risk', render: hazardPage },
+      { path: 'risk/special', name: '专项风险管理', group: 'risk', render: specialPage },
+      { path: 'risk/criteria', name: '风险评价标准', group: 'risk', render: criteriaPage },
+      { path: 'risk/matrix', name: '风险矩阵', group: 'risk', render: matrixHeatPage }
+    ]
+  });
+})();
+
+
+/* ===== modules/hiddendanger.js ===== */
+/* =====================================================================
+   modules/hiddendanger.js — 隐患排查整改闭环（D3.7 / D5.2）
+   状态机：待整改 → 整改中 → 待复查 → 已关闭；复查不通过退回整改。
+   整改（整改措施/等效替代）、复查验证、证据留存、超期自动催办升级（I8）、
+   关闭时文本相似度去重并自动转入危险源库（I3）。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS, S = SMS.store, U = SMS.util, ui = SMS.ui;
+  const el = U.el;
+  const deptOpts = () => S.all('departments').map(d => ({ value: d.id, label: d.name }));
+  const deptName = id => (S.get('departments', id) || {}).name || '—';
+  const userOpts = () => S.all('users').map(u => ({ value: u.id, label: u.name }));
+  const userName = id => (S.get('users', id) || {}).name || '—';
+  const facOpts = () => S.all('facilities').map(f => ({ value: f.id, label: f.name }));
+
+  const HD_LEVELS = ['一般隐患', '重大隐患'];
+  const HD_SOURCES = ['日常检查', '专项检查', '内部审核', '自愿报告', '强制报告', '事件调查', '外部反馈'];
+  const STATUS = ['待整改', '整改中', '待复查', '已关闭', '已退回'];
+
+  /* ---------- 超期自动催办升级（每日一次，I8） ---------- */
+  function runEscalation() {
+    if (S.jobRanToday('hd-escalate')) return;
+    let changed = false;
+    S.all('hiddenDangers').forEach(h => {
+      if (h.status !== '已关闭' && h.rectifyDue && h.rectifyDue < U.today() && !h.escalated) {
+        S.update('hiddenDangers', h.id, { escalated: 1 });
+        // 升级至承办部门负责人
+        const leader = S.find('users', u => u.deptId === h.rectifyDeptId && (u.role === '部门领导'));
+        S.insert('todos', { title: '【超期升级】隐患 ' + h.code + ' 已超期未闭环，请督办', category: '隐患整改', type: 'hazard', assigneeId: leader ? leader.id : h.rectifierId, deptId: h.rectifyDeptId, dueDate: U.today(), route: 'risk/hiddendanger', status: '待办', source: '系统升级' });
+        changed = true;
+      }
+    });
+    S.markJob('hd-escalate');
+    if (changed) ui.toast('检测到超期隐患，系统已自动催办并升级', 'warn');
+  }
+
+  /* ---------- 关闭时自动转危险源（相似度去重，I3） ---------- */
+  function transferToHazard(h) {
+    const text = h.desc + (h.category || '');
+    let best = { sim: 0, hz: null };
+    S.all('hazards').forEach(hz => {
+      const sim = SMS.aiRisk.similarity(text, hz.name + hz.scene + hz.desc);
+      if (sim > best.sim) best = { sim, hz };
+    });
+    if (best.sim >= 0.5) {
+      S.update('hiddenDangers', h.id, { toHazard: '是（关联）', hazardId: best.hz.id });
+      S.inc('hazards', best.hz.id, 'triggerCount', 1);
+      return '已匹配到相似危险源 ' + best.hz.code + '（相似度 ' + Math.round(best.sim * 100) + '%），自动关联、不重复建档。';
+    }
+    const n = S.all('hazards').filter(x => (x.code || '').indexOf('WXY-' + U.today().slice(0, 4)) === 0).length + 1;
+    const hz = S.insert('hazards', {
+      code: 'WXY-' + U.today().slice(0, 4) + '-' + String(n).padStart(3, '0'),
+      name: U.truncate(h.desc, 24), category: h.category || '机坪运行', system: '风险管理',
+      facilityId: h.facilityId, scene: '由隐患 ' + h.code + ' 关闭时自动转入。', desc: h.desc,
+      respDeptId: h.rectifyDeptId, respPostId: '', likelihood: 3, severity: h.level === '重大隐患' ? 4 : 2,
+      riskValue: '', level: '', acceptability: '', expertEval: '', controlMeasures: h.rectifyDesc || '',
+      status: '待评价', foundDate: U.today(), source: '隐患转化', isWarn: h.level === '重大隐患',
+      warnValue: 3, triggerCount: 1, remark: '隐患关闭自动转入，待动态评价。'
+    });
+    S.update('hiddenDangers', h.id, { toHazard: '是（新建）', hazardId: hz.id });
+    return '未发现相似危险源，已自动新建危险源 ' + hz.code + ' 并转入危险源库，待动态评价。';
+  }
+
+  /* ---------- 表单字段 ---------- */
+  const fields = [
+    { field: 'code', label: '隐患编号', type: 'readonly' },
+    { field: 'source', label: '问题来源', type: 'select', options: HD_SOURCES, required: true },
+    { field: 'level', label: '隐患级别', type: 'radio', options: HD_LEVELS, required: true, default: '一般隐患' },
+    { field: 'category', label: '安全类别', type: 'select', options: ['飞行区运行', '机坪运行', '净空保护', '气象灾害', '鸟害防治', '供油保障', '地面保障', '安检保卫', '消防应急', '信息系统'] },
+    { field: 'facilityId', label: '所在部位/设施', type: 'select', options: facOpts },
+    { field: 'desc', label: '问题描述', type: 'textarea', span: 2, required: true },
+    { field: 'foundDate', label: '发现日期', type: 'date', required: true },
+    { field: 'foundById', label: '发现人', type: 'select', options: userOpts },
+    { field: 'rectifyDeptId', label: '整改责任部门', type: 'select', options: deptOpts, required: true },
+    { field: 'rectifierId', label: '整改责任人', type: 'select', options: userOpts, required: true },
+    { field: 'rectifyDue', label: '整改期限', type: 'date', required: true },
+    { field: 'status', label: '状态', type: 'select', options: STATUS, default: '待整改' },
+    { field: 'remark', label: '备注', type: 'textarea', span: 2 }
+  ];
+
+  function page() {
+    runEscalation();
+    return ui.crudPage({
+      title: '隐患排查整改', icon: 'alert', table: 'hiddenDangers', tableTitle: '隐患台账',
+      subtitle: '隐患登记、整改（整改措施/等效替代）、复查验证与关闭的全流程闭环，证据材料留存；关闭自动转入危险源库。',
+      columns: [
+        { field: 'code', title: '编号', width: '120px' },
+        { field: 'desc', title: '问题描述', render: (v, r) => '<span class="cell-main">' + U.escapeHtml(U.truncate(v, 30)) + '</span>' + (r.escalated ? ' <span class="badge red">超期升级</span>' : '') },
+        { field: 'level', title: '级别', width: '92px', render: v => ui.badge(v, v === '重大隐患' ? 'red' : 'yellow').outerHTML },
+        { field: 'rectifyDeptId', title: '责任部门', width: '120px', render: v => deptName(v) },
+        { field: 'rectifierId', title: '责任人', width: '90px', render: v => userName(v) },
+        { field: 'rectifyDue', title: '整改期限', width: '104px' },
+        { field: 'status', title: '状态', width: '90px', badge: v => ({ '已关闭': 'green', '待复查': 'orange', '待整改': 'red', '整改中': 'blue', '已退回': 'red' })[v] },
+        { field: 'toHazard', title: '转危险源', width: '100px', render: v => v ? ui.badge(v, 'teal').outerHTML : '—' }
+      ],
+      filters: [
+        { field: 'level', label: '级别', type: 'select', options: HD_LEVELS },
+        { field: 'status', label: '状态', type: 'select', options: STATUS },
+        { field: 'rectifyDeptId', label: '责任部门', type: 'select', options: deptOpts }
+      ],
+      fields, formSize: 'lg', addText: '登记隐患',
+      onBeforeSave(rec, mode) {
+        if (mode === 'add' && !rec.code) rec.code = 'YH-' + U.today().slice(0, 4) + '-' + String(S.all('hiddenDangers').length + 1).padStart(3, '0');
+        if (!rec.foundDate) rec.foundDate = U.today();
+        if (!rec.flowLog) rec.flowLog = [{ time: U.nowStr(), by: userName((SMS.auth.user() || {}).id), action: '登记隐患', note: rec.desc }];
+      },
+      actions: [
+        { label: '提交整改', show: r => ['待整改', '整改中', '已退回'].includes(r.status), onClick: r => rectifyModal(r) },
+        { label: '复查验证', show: r => r.status === '待复查', tone: '', onClick: r => verifyModal(r) }
+      ],
+      rowClass(r) { return r.status !== '已关闭' && r.rectifyDue && r.rectifyDue < U.today() ? 'danger-row' : ''; },
+      detail: {
+        title: r => '隐患 ' + r.code, size: 'xl',
+        render(r) { return detail(r); }
+      }
+    });
+  }
+
+  /* ---------- 整改弹窗 ---------- */
+  function rectifyModal(h) {
+    const f = ui.renderForm([
+      { field: 'rectifyType', label: '整改方式', type: 'radio', options: ['整改措施', '等效替代'], required: true, default: '整改措施' },
+      { field: 'rectifyDesc', label: '整改情况说明', type: 'textarea', span: 2, required: true, placeholder: '说明采取的工程/管理措施、整改过程与结果' },
+      { field: 'rectifyFund', label: '整改资金(元)', type: 'number', min: 0 },
+      { field: 'rectifyAttach', label: '整改后照片/佐证材料', type: 'file', span: 2 },
+      { field: 'rectifyDate', label: '整改完成日期', type: 'date', default: U.today() }
+    ], h);
+    ui.modal({
+      title: '提交整改 · ' + h.code, icon: 'clipboard', size: 'lg', body: f.el, okText: '提交复查',
+      onOk: (b, close) => {
+        if (!f.validate()) return;
+        const rec = f.rec();
+        rec.status = '待复查'; rec.escalated = 0;
+        rec.flowLog = (h.flowLog || []).concat([{ time: U.nowStr(), by: SMS.auth.user().name, action: '提交整改（' + rec.rectifyType + '）', note: rec.rectifyDesc }]);
+        S.update('hiddenDangers', h.id, rec);
+        // 通知复查人（部门安全员 / 监察员）
+        const verifier = S.find('users', u => u.deptId === h.rectifyDeptId && u.role === '部门安全员') || S.get('users', 'user-ds');
+        S.insert('todos', { title: '隐患 ' + h.code + ' 已提交整改，请复查验证', category: '隐患整改', type: 'hazard', assigneeId: verifier ? verifier.id : 'user-ds', deptId: h.rectifyDeptId, dueDate: U.fmtDate(U.addDays(new Date(), 5)), route: 'risk/hiddendanger', status: '待办', source: '隐患复查' });
+        close(); ui.toast('整改已提交，等待复查验证', 'ok');
+      }
+    });
+  }
+
+  /* ---------- 复查弹窗 ---------- */
+  function verifyModal(h) {
+    const f = ui.renderForm([
+      { field: 'verifyResult', label: '验证结果', type: 'radio', options: ['通过（关闭）', '不通过（退回整改）'], required: true, default: '通过（关闭）' },
+      { field: 'verifyDesc', label: '验证意见', type: 'textarea', span: 2, required: true },
+      { field: 'verifyAttach', label: '验证材料', type: 'file', span: 2 }
+    ], h);
+    ui.modal({
+      title: '复查验证 · ' + h.code, icon: 'check', size: 'lg', body: f.el, okText: '提交验证',
+      onOk: (b, close) => {
+        if (!f.validate()) return;
+        const rec = f.rec();
+        const pass = rec.verifyResult.indexOf('通过') === 0;
+        rec.verifierId = SMS.auth.user().id; rec.verifyDate = U.today();
+        let msg;
+        if (pass) {
+          rec.status = '已关闭';
+          rec.flowLog = (h.flowLog || []).concat([{ time: U.nowStr(), by: SMS.auth.user().name, action: '复查通过，关闭隐患', note: rec.verifyDesc }]);
+          S.update('hiddenDangers', h.id, rec);
+          msg = transferToHazard(S.get('hiddenDangers', h.id));
+        } else {
+          rec.status = '已退回';
+          rec.flowLog = (h.flowLog || []).concat([{ time: U.nowStr(), by: SMS.auth.user().name, action: '复查不通过，退回整改', note: rec.verifyDesc }]);
+          S.update('hiddenDangers', h.id, rec);
+          S.insert('todos', { title: '隐患 ' + h.code + ' 复查未通过，请重新整改', category: '隐患整改', type: 'hazard', assigneeId: h.rectifierId, deptId: h.rectifyDeptId, dueDate: U.fmtDate(U.addDays(new Date(), 7)), route: 'risk/hiddendanger', status: '待办', source: '隐患整改' });
+        }
+        close(); ui.toast(pass ? '隐患已关闭。' + msg : '已退回整改', pass ? 'ok' : 'warn');
+      }
+    });
+  }
+
+  /* ---------- 详情 ---------- */
+  function detail(r) {
+    const wrap = el('div');
+    const stepIndex = { '待整改': 0, '整改中': 1, '已退回': 1, '待复查': 2, '已关闭': 3 }[r.status] || 0;
+    wrap.appendChild(ui.approvalSteps([
+      { title: '登记建账', meta: r.foundDate },
+      { title: '落实整改', meta: r.rectifyType || '待整改' },
+      { title: '复查验证', meta: r.verifyDate || '待复查' },
+      { title: '关闭/转危险源', meta: r.toHazard || '—' }
+    ], stepIndex));
+
+    wrap.appendChild(el('div', { class: 'section-title', text: '基本信息' }));
+    wrap.appendChild(ui.descList([
+      { label: '问题来源', value: r.source }, { label: '隐患级别', valueDom: ui.badge(r.level, r.level === '重大隐患' ? 'red' : 'yellow') },
+      { label: '安全类别', value: r.category }, { label: '所在部位', value: (S.get('facilities', r.facilityId) || {}).name },
+      { label: '问题描述', value: r.desc, full: true }, { label: '发现日期', value: r.foundDate }, { label: '发现人', value: userName(r.foundById) },
+      { label: '整改责任部门', value: deptName(r.rectifyDeptId) }, { label: '整改责任人', value: userName(r.rectifierId) },
+      { label: '整改期限', value: r.rectifyDue }
+    ]));
+
+    if (r.rectifyDesc) {
+      wrap.appendChild(el('div', { class: 'section-title', text: '整改与验证' }));
+      wrap.appendChild(ui.descList([
+        { label: '整改方式', value: r.rectifyType }, { label: '整改完成日期', value: r.rectifyDate },
+        { label: '整改资金', value: r.rectifyFund ? '¥' + U.fmtNum(r.rectifyFund) : '—' }, { label: '验证人', value: userName(r.verifierId) },
+        { label: '整改情况', value: r.rectifyDesc, full: true }, { label: '验证意见', value: r.verifyDesc, full: true },
+        { label: '佐证材料', value: r.rectifyAttach || r.verifyAttach || '见附件归档', full: true },
+        { label: '危险源转化', value: r.toHazard ? r.toHazard + (r.hazardId ? '（' + (S.get('hazards', r.hazardId) || {}).code + '）' : '') : '关闭后自动处理', full: true }
+      ]));
+    }
+
+    if (r.flowLog && r.flowLog.length) {
+      wrap.appendChild(el('div', { class: 'section-title', text: '办理轨迹' }));
+      wrap.appendChild(ui.timeline(r.flowLog.map((x, i) => ({
+        title: x.action, meta: U.escapeHtml(x.by) + ' · ' + x.time + (x.note ? '<br/>' + U.escapeHtml(U.truncate(x.note, 60)) : ''),
+        state: i === r.flowLog.length - 1 ? 'current' : 'done'
+      }))));
+    }
+    return wrap;
+  }
+
+  SMS.registerModule({
+    id: 'hiddendanger',
+    menus: [{ group: 'risk', name: '隐患排查整改', icon: 'alert', route: 'risk/hiddendanger', order: 5 }],
+    routes: [{ path: 'risk/hiddendanger', name: '隐患排查整改', group: 'risk', render: page }]
+  });
+})();
+
+
+/* ===== core/bootstrap.js ===== */
+/* =====================================================================
+   core/bootstrap.js — 应用启动与外壳
+   登录（统一登录模拟 + 应急登录）→ 主框架（侧栏 / 顶栏 / 内容区）
+   本文件由 loader 最后加载，负责初始化数据并启动。
+   ===================================================================== */
+(function () {
+  'use strict';
+  const SMS = window.SMS, S = SMS.store, U = SMS.util, ui = SMS.ui;
+  const el = U.el;
+  const mount = U.qs('#app');
+
+  function start() {
+    S.init();
+    if (SMS.auth.isAuthed()) renderShell();
+    else renderLogin();
+  }
+
+  /* ===================== 登录页 ===================== */
+  function renderLogin() {
+    U.clear(mount);
+    mount.className = 'login-mount';
+
+    const demoAccounts = S.all('users').filter(u => ['admin', 'leader', 'vgm', 'aq', 'inspector', 'inspector2', 'aqadmin', 'dmgr', 'dsafety', 'dsafety2', 'staff'].includes(u.account));
+
+    const ssoSelect = el('select');
+    demoAccounts.forEach(u => ssoSelect.appendChild(el('option', { value: u.account, text: u.name + '（' + u.role + '）' })));
+
+    const acc = el('input', { placeholder: '请输入账号', value: 'admin' });
+    const pwd = el('input', { type: 'password', placeholder: '请输入密码', value: 'admin123' });
+
+    const errBox = el('div', { class: 'login-err' });
+
+    function doEmergency() {
+      errBox.textContent = '';
+      const r = SMS.auth.login(acc.value.trim(), pwd.value);
+      if (!r.ok) { errBox.textContent = r.msg; return; }
+      enterApp();
+    }
+    function doSSO() {
+      const r = SMS.auth.ssoLogin(ssoSelect.value);
+      if (!r.ok) { errBox.textContent = r.msg; return; }
+      enterApp();
+    }
+
+    const card = el('div', { class: 'login-card' }, [
+      el('div', { class: 'login-brand' }, [
+        el('div', { class: 'lb-logo', html: ui.icon('shield', 26) }),
+        el('div', {}, [
+          el('div', { class: 'lb-title', text: 'SMS 机场安全管理系统' }),
+          el('div', { class: 'lb-sub', text: 'Safety Management System' })
+        ])
+      ]),
+
+      /* 统一登录 */
+      el('div', { class: 'login-block' }, [
+        el('label', { class: 'login-label', text: '统一身份认证（OA 单点登录 · 模拟）' }),
+        el('div', { class: 'sso-row' }, [ssoSelect, el('button', { class: 'btn btn-primary', html: ui.icon('shield') + ' 统一登录', onClick: doSSO })])
+      ]),
+
+      el('div', { class: 'login-divider' }, [el('span', { text: '或使用应急登录' })]),
+
+      /* 应急登录 */
+      el('div', { class: 'login-block' }, [
+        el('label', { class: 'login-label', text: '应急登录（本系统账号）' }),
+        acc, pwd, errBox,
+        el('button', { class: 'btn btn-block', html: ui.icon('user') + ' 登 录', onClick: doEmergency })
+      ]),
+
+      el('div', { class: 'login-hint' }, [
+        el('div', { class: 'strong', style: { marginBottom: '4px' }, text: '演示账号（账号 / 密码）' }),
+        el('div', { class: 'small', text: '系统管理员 admin/admin123；总经理 leader/leader123；安全总监 aq/aq123；监察员 inspector/insp123；部门安全员 dsafety/ds123；员工 staff/staff123。' })
+      ]),
+      el('div', { class: 'login-foot small', text: '北京四型航港科技有限公司 · 系统数据为演示数据' })
+    ]);
+
+    pwd.addEventListener('keydown', e => { if (e.key === 'Enter') doEmergency(); });
+    mount.appendChild(card);
+  }
+
+  function enterApp() {
+    if (!location.hash) location.hash = '#/home/company';
+    renderShell();
+  }
+
+  /* ===================== 主框架 ===================== */
+  function renderShell() {
+    U.clear(mount);
+    mount.className = 'app-mount';
+
+    const sideNav = el('div', { class: 'side-nav' });
+    const crumb = el('div', { class: 'crumb' });
+    const content = el('div', { class: 'content' });
+
+    /* 顶栏右侧 */
+    const u = SMS.auth.user();
+    const roleSwitch = el('select', { class: 'role-switch', title: '演示用：切换角色' });
+    S.all('users').filter(x => ['admin', 'leader', 'vgm', 'aq', 'inspector', 'inspector2', 'aqadmin', 'dmgr', 'ocmgr', 'armgr', 'scmgr', 'dsafety', 'dsafety2', 'staff'].includes(x.account))
+      .forEach(x => roleSwitch.appendChild(el('option', { value: x.id, text: x.name + '·' + x.role })));
+    roleSwitch.value = u.id;
+    roleSwitch.addEventListener('change', () => {
+      SMS.auth.switchTo(roleSwitch.value);
+      SMS.router.buildSidebar();
+      SMS.router.render();
+      updateUserBlock();
+    });
+
+    const userBlock = el('div', { class: 'user-block' });
+    function updateUserBlock() {
+      const x = SMS.auth.user();
+      U.clear(userBlock);
+      const av = el('div', { class: 'user-av', text: U.initials(x.name) });
+      const info = el('div', { class: 'user-info' }, [
+        el('div', { class: 'uname', text: x.name }),
+        el('div', { class: 'urole', text: x.role })
+      ]);
+      userBlock.appendChild(av); userBlock.appendChild(info);
+      roleSwitch.value = x.id;
+    }
+
+    const logoutBtn = el('button', { class: 'icon-btn', title: '退出登录', html: ui.icon('logout', 17), onClick: () => { SMS.auth.logout(); renderLogin(); } });
+
+    const topbar = el('div', { class: 'topbar' }, [
+      el('div', { class: 'topbar-l' }, [
+        el('button', { class: 'icon-btn side-toggle', html: ui.icon('filter', 18), onClick: toggleSide }),
+        crumb
+      ]),
+      el('div', { class: 'topbar-r' }, [
+        el('span', { class: 'sim-tag', text: '演示数据' }),
+        roleSwitch, userBlock, logoutBtn
+      ])
+    ]);
+
+    const sidebar = el('div', { class: 'sidebar' }, [
+      el('div', { class: 'side-logo' }, [
+        el('span', { class: 'sl-ic', html: ui.icon('shield', 20) }),
+        el('span', { class: 'sl-tx' }, [el('b', { text: 'SMS 安全管理' }), el('small', { text: '机场安全管理系统' })])
+      ]),
+      sideNav
+    ]);
+
+    const main = el('div', { class: 'main' }, [topbar, content]);
+    const app = el('div', { class: 'app' }, [sidebar, main]);
+    mount.appendChild(app);
+
+    SMS.router.mount(content);
+    SMS.router.buildSidebar();
+    SMS.router.render();
+    updateUserBlock();
+
+    function toggleSide() { app.classList.toggle('side-collapsed'); }
+  }
+
+  /* 启动 */
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+
+
+</script>
+</body>
+</html>
